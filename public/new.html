@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testify JEE - Complete Test Platform</title>
+    <style>
+        :root {
+            --primary: #667eea; --secondary: #764ba2; --success: #28a745; --danger: #dc3545;
+            --warning: #ffc107; --info: #17a2b8; --light: #f8f9fa; --dark: #343a40;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); min-height: 100vh; }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; color: white; margin-bottom: 30px; background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; backdrop-filter: blur(10px); }
+        .header h1 { font-size: 3em; margin-bottom: 10px; }
+        
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s; }
+        .card:hover { transform: translateY(-10px); }
+        .card h3 { color: var(--dark); margin-bottom: 15px; font-size: 1.5em; }
+        .card.large { grid-column: span 2; }
+        
+        .test-selector { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .test-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 30px; }
+        .test-card { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 30px; border-radius: 15px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+        .test-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: rgba(255,255,255,0.1); transform: rotate(45deg); transition: all 0.3s; }
+        .test-card:hover::before { top: -100%; left: -100%; }
+        .test-card:hover { transform: scale(1.05); }
+        .test-icon { font-size: 3em; margin-bottom: 15px; display: block; }
+        .test-qty { font-size: 1.2em; opacity: 0.9; }
+        
+        .chapter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+        .chapter-card { background: white; padding: 25px; border-radius: 15px; cursor: pointer; transition: all 0.3s; border: 3px solid transparent; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .chapter-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .chapter-stats { display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.9em; color: #6c757d; }
+        
+        /* Test Interface */
+        .test-interface { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: none; margin-top: 20px; }
+        .test-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid var(--light); }
+        .timer { font-size: 2em; font-weight: bold; color: var(--danger); }
+        .test-info h3 { margin-bottom: 5px; }
+        .question-container { min-height: 400px; }
+        .question { background: var(--light); padding: 30px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid var(--primary); }
+        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .q-number { background: var(--primary); color: white; padding: 10px 20px; border-radius: 25px; font-weight: bold; }
+        .options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .option { padding: 20px; border: 2px solid #dee2e6; border-radius: 12px; cursor: pointer; transition: all 0.3s; background: white; text-align: left; }
+        .option:hover:not(.selected) { border-color: var(--primary); background: #f0f8ff; }
+        .option.selected { background: var(--success); color: white; border-color: #1e7e34; }
+        .option.correct { background: var(--success); color: white; border-color: #1e7e34; }
+        .option.wrong { background: var(--danger); color: white; border-color: #c82333; }
+        
+        .controls { display: flex; gap: 15px; justify-content: space-between; margin-top: 30px; padding-top: 20px; border-top: 3px solid var(--light); }
+        .btn { padding: 15px 30px; border: none; border-radius: 12px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s; flex: 1; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        
+        /* Analysis */
+        .analysis { display: none; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); margin-top: 20px; }
+        .score-circle { width: 200px; height: 200px; border-radius: 50%; margin: 0 auto 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 2.5em; font-weight: bold; color: white; }
+        .score-90 { background: conic-gradient(var(--success) 0deg 90deg, var(--warning) 90deg 70deg, var(--danger) 70deg 360deg); }
+        .analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        .analysis-card { text-align: center; padding: 30px; background: var(--light); border-radius: 15px; }
+        .analysis-card h4 { color: var(--dark); margin-bottom: 15px; }
+        .metric { font-size: 2.5em; font-weight: bold; color: var(--primary); }
+        
+        .progress-bar { background: #e9ecef; height: 10px; border-radius: 5px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--success), var(--warning)); transition: width 1s ease; border-radius: 5px; }
+        
+        .back-btn { position: fixed; top: 20px; left: 20px; background: rgba(255,255,255,0.95); padding: 15px 25px; border-radius: 30px; cursor: pointer; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.2); font-weight: bold; transition: all 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="back-btn" onclick="showDashboard()" style="display: none;">← Dashboard</div>
+    
+    <div class="container">
+        <!-- Dashboard -->
+        <div class="header">
+            <h1>🎯 Testify JEE</h1>
+            <p>Complete JEE Main & Advanced Preparation Platform</p>
+        </div>
+        
+        <div id="dashboard" class="dashboard">
+            <div class="card large" onclick="startTest('full')">
+                <div style="font-size: 4em; margin-bottom: 20px;">📋</div>
+                <h3>Full Mock Test</h3>
+                <p>90 Questions • 180 min • JEE Main Pattern</p>
+            </div>
+            <div class="card" onclick="showSubjects()">
+                <div style="font-size: 3em; margin-bottom: 15px;">📚</div>
+                <h3>Subject Tests</h3>
+                <p>25 Questions Each</p>
+            </div>
+            <div class="card" onclick="showChapters()">
+                <div style="font-size: 3em; margin-bottom: 15px;">📖</div>
+                <h3>Chapter Practice</h3>
+                <p>Targeted Practice</p>
+            </div>
+            <div class="card">
+                <div style="font-size: 3em; margin-bottom: 15px;">📊</div>
+                <h3>Analytics</h3>
+                <p>Performance Tracking</p>
+            </div>
+        </div>
+
+        <!-- Test Selector -->
+        <div id="test-selector" class="test-selector" style="display: none;">
+            <div class="test-grid" id="test-grid"></div>
+        </div>
+
+        <!-- Test Interface -->
+        <div id="test-interface" class="test-interface">
+            <div class="test-header">
+                <div class="test-info">
+                    <h3 id="test-title"></h3>
+                    <p id="test-details"></p>
+                </div>
+                <div class="timer" id="timer">Loading...</div>
+            </div>
+            <div class="question-container" id="question-container"></div>
+            <div class="controls">
+                <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+                <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next</button>
+                <button class="btn btn-success" id="finish-btn" onclick="finishTest()" style="display: none;">Finish Test</button>
+            </div>
+        </div>
+
+        <!-- Analysis -->
+        <div id="analysis" class="analysis">
+            <div class="score-circle score-90" id="score-circle">
+                <div id="score-text">85%</div>
+                <div style="font-size: 0.5em; opacity: 0.8;">Your Score</div>
+            </div>
+            <h2 id="analysis-title">Test Analysis</h2>
+            <div class="analysis-grid" id="analysis-grid"></div>
+            <button class="btn btn-primary" onclick="showDashboard()" style="width: 100%; margin-top: 30px; padding: 20px; font-size: 1.2em;">📋 Take Another Test</button>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive JEE Question Database
+        const jeeDB = {
+            full: [
+                // 30 Physics, 30 Chemistry, 30 Math questions
+                {subject: 'Physics', chapter: 'Kinematics', q: 'What is the unit of acceleration?', options: ['m/s', 'm/s²', 'km/h', 'N'], ans: 1},
+                {subject: 'Chemistry', chapter: 'Atomic Structure', q: 'Atomic number of Carbon?', options: ['6', '12', '14', '8'], ans: 0},
+                {subject: 'Math', chapter: 'Calculus', q: 'd/dx (sin x) = ?', options: ['cos x', '-sin x', 'sin x', '1/cos x'], ans: 0},
+                // Add 87 more questions...
+            ].concat(Array(87).fill().map(() => ({
+                subject: ['Physics', 'Chemistry', 'Math'][Math.floor(Math.random()*3)],
+                chapter: 'Various',
+                q: 'Sample question ' + Math.random(),
+                options: ['A', 'B', 'C', 'D'],
+                ans: Math.floor(Math.random()*4)
+            }))),
+            
+            Physics: [
+                {chapter: 'Kinematics', q: 'Time of flight for projectile?', options: ['2u sinθ/g', 'u sinθ/g', 'u cosθ/g', '2u cosθ/g'], ans: 0},
+                // 24 more Physics questions...
+            ].concat(Array(24).fill().map(() => ({chapter: 'Various', q: 'Physics Q', options: ['A','B','C','D'], ans: 0}))),
+            
+            Chemistry: Array(25).fill().map(() => ({
+                chapter: 'Various', q: 'Chemistry Q', options: ['A','B','C','D'], ans: 0
+            })),
+            
+            Math: Array(25).fill().map(() => ({
+                chapter: 'Various', q: 'Math Q', options: ['A','B','C','D'], ans: 0
+            }))
+        };
+
+        // State Management
+        let currentTestType = '', currentQuestions = [], currentQuestionIdx = 0, 
+            timeLeft = 0, timerInterval, userAnswers = [], testStartTime = 0;
+
+        function showDashboard() {
+            document.querySelector('.back-btn').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'grid';
+            document.getElementById('test-selector').style.display = 'none';
+            document.getElementById('test-interface').style.display = 'none';
+            document.getElementById('analysis').style.display = 'none';
+        }
+
+        function showSubjects() {
+            document.querySelector('.back-btn').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('test-selector').style.display = 'block';
+            document.getElementById('test-grid').innerHTML = `
+                <div class="test-card" onclick="startTest('Physics')">
+                    <span class="test-icon">⚛️</span>
+                    <h3>Physics</h3>
+                    <p class="test-qty">25 Questions • 60 min</p>
+                </div>
+                <div class="test-card" onclick="startTest('Chemistry')">
+                    <span class="test-icon">🧪</span>
+                    <h3>Chemistry</h3>
+                    <p class="test-qty">25 Questions • 60 min</p>
+                </div>
+                <div class="test-card" onclick="startTest('Math')">
+                    <span class="test-icon">📐</span>
+                    <h3>Mathematics</h3>
+                    <p class="test-qty">25 Questions • 60 min</p>
+                </div>
+            `;
+        }
+
+        function showChapters() {
+            // Similar implementation for chapter-wise
+            alert('Chapter-wise practice coming soon!');
+        }
+
+        function startTest(type) {
+            currentTestType = type;
+            document.getElementById('test-selector').style.display = 'none';
+            document.getElementById('test-interface').style.display = 'block';
+            
+            currentQuestions = [...jeeDB[type]];
+            currentQuestionIdx = 0;
+            userAnswers = new Array(currentQuestions.length).fill(-1);
+            
+            const testConfig = {
+                full: {time: 10800, title: 'JEE Main Full Mock', details: '90 Questions | 3 Hours'},
+                Physics: {time: 3600, title: 'Physics Subject Test', details: '25 Questions | 1 Hour'},
+                Chemistry: {time: 3600, title: 'Chemistry Subject Test', details: '25 Questions | 1 Hour'},
+                Math: {time: 3600, title: 'Mathematics Subject Test', details: '25 Questions | 1 Hour'}
+            };
+            
+            document.getElementById('test-title').textContent = testConfig[type].title;
+            document.getElementById('test-details').textContent = testConfig[type].details;
+            
+            timeLeft = testConfig[type].time;
+            testStartTime = Date.now();
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                document.getElementById('timer').textContent = 
+                    `${mins}:${secs.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            const q = currentQuestions[currentQuestionIdx];
+            document.getElementById('question-container').innerHTML = `
+                <div class="question">
+                    <div class="q-header">
+                        <div class="q-number">Q${currentQuestionIdx + 1}/${currentQuestions.length}</div>
+                        <div>${q.subject} - ${q.chapter}</div>
+                    </div>
+                    <h4 style="margin-bottom: 20px; color: var(--dark);">${q.q}</h4>
+                    <div class="options-grid">
+                        ${q.options.map((opt, i) => `
+                            <div class="option ${userAnswers[currentQuestionIdx] === i ? 'selected' : ''}" 
+                                 onclick="selectAnswer(${currentQuestionIdx}, ${i})">
+                                ${String.fromCharCode(65 + i)}. ${opt}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('prev-btn').disabled = currentQuestionIdx === 0;
+            document.getElementById('finish-btn').style.display = 
+                currentQuestionIdx === currentQuestions.length - 1 ? 'block' : 'none';
+        }
+
+        function selectAnswer(qIdx, ansIdx) {
+            userAnswers[qIdx] = ansIdx;
+            loadQuestion(); // Refresh to show selection
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIdx < currentQuestions.length - 1) {
+                currentQuestionIdx++;
+                loadQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIdx > 0) {
+                currentQuestionIdx--;
+                loadQuestion();
+            }
+        }
+
+        function finishTest() {
+            clearInterval(timerInterval);
+            document.getElementById('test-interface').style.display = 'none';
+            document.getElementById('analysis').style.display = 'block';
+            
+            // Calculate Results
+            let score = 0, subjectScores = {Physics: 0, Chemistry: 0, Math: 0}, subjectCounts = {Physics: 0, Chemistry: 0, Math: 0};
+            
+            currentQuestions.forEach((q, i) => {
+                if (userAnswers[i] === q.ans) score++;
+                subjectCounts[q.subject]++;
+                if (userAnswers[i] === q.ans) subjectScores[q.subject]++;
+            });
+            
+            const total = currentQuestions.length;
+            const percentage = Math.round((score / total) * 100);
+            
+            // Update Score Circle
+            document.getElementById('score-text').textContent = `${score}/${total} (${percentage}%)`;
+            document.getElementById('analysis-title').textContent = `${currentTestType.toUpperCase()} ANALYSIS`;
+            
+            // Subject-wise Analysis
+            const analysisHTML = Object.entries(subjectScores).map(([subject, subScore]) => {
+                const subTotal = subjectCounts[subject];
+                const subPerc = subTotal > 0 ? Math.round((subScore / subTotal) * 100) : 0;
+                return `
+                    <div class="analysis-card">
+                        <h4>${subject}</h4>
+                        <div class="metric">${subScore}/${subTotal}</div>
+                        <div style="font-size: 1.5em; color: ${subPerc >= 70 ? 'var(--success)' : subPerc >= 50 ? 'var(--warning)' : 'var(--danger)'}">${subPerc}%</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: ${subPerc}%"></div></div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('analysis-grid').innerHTML = analysisHTML;
+        }
+
+        // Initialize
+        showDashboard();
+    </script>
+</body>
+</html>

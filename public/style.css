@@ -1,0 +1,161 @@
+:root {
+  --bg: #eef1f5;
+  --container-bg: #fff;
+  --text-color: #2b2d42;
+  --card-bg: #f9f9f9;
+  --button-bg: #6c63ff;
+  --button-hover: #554de2;
+}
+
+body.dark {
+  --bg: #1e1e2f;
+  --container-bg: #2a2b3c;
+  --text-color: #fff;
+  --card-bg: #3a3b4d;
+  --button-bg: #554de2;
+  --button-hover: #6c63ff;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: var(--text-color);
+  transition: background 0.4s, color 0.4s;
+}
+
+.container {
+  background: var(--container-bg);
+  padding: 2rem;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h3 {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  margin-top: 0.75rem;
+  font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+}
+
+body.dark input[type="text"],
+body.dark input[type="email"],
+body.dark input[type="password"] {
+  background: #444;
+  color: #fff;
+  border: 1px solid #666;
+}
+
+input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+button,
+.guest-button,
+.logout-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--button-bg);
+  color: white;
+  border: none;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1.2rem;
+  text-align: center;
+  display: block;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+button:hover,
+.guest-button:hover,
+.logout-button:hover {
+  background-color: var(--button-hover);
+}
+
+.form-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  box-shadow: inset 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+/* Background for Login */
+.login-bg {
+  background: linear-gradient(135deg, #6c63ff, #3f3d56);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.login-container {
+  background: white;
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-container h2 {
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.brand {
+  color: #6c63ff;
+  font-weight: bold;
+}
+
+/* Guest button like secondary button */
+.guest-button {
+  margin-top: 1.2rem;
+  display: block;
+  padding: 0.75rem;
+  background-color: #e0e0e0;
+  color: #333;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+
+.guest-button:hover {
+  background-color: #ccc;
+}

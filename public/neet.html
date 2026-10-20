@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testify - NEET Practice Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #3a7bd5;
+      --primary-dark: #2c5fb3;
+      --secondary: #00d2ff;
+      --accent: #ff4b4b;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --success: #28a745;
+      --danger: #dc3545;
+      --warning: #ffc107;
+      --info: #17a2b8;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+      --white: #ffffff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+      --border-radius: 12px;
+      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f9ff;
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    /* Header Styles */
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--white);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo i {
+      font-size: 1.8rem;
+      color: var(--secondary);
+    }
+    
+    .logo h2 {
+      font-weight: 600;
+      font-size: 1.8rem;
+      background: linear-gradient(to right, var(--white), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    #timer {
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 0.5rem 1.2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(5px);
+    }
+    
+    #timer i {
+      color: var(--secondary);
+    }
+    
+    .timer-ended {
+      background-color: var(--danger) !important;
+    }
+    
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    /* Test Sections */
+    .login, .test, .result {
+      display: none;
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 2.5rem;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 2rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+    
+    .active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Login Section */
+    .welcome-text {
+      margin-bottom: 1.5rem;
+      color: var(--gray);
+      font-size: 1.1rem;
+    }
+    
+    .input-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      margin: 8px 0;
+      border: 1px solid var(--light-gray);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: var(--transition);
+      background-color: var(--light);
+    }
+    
+    input[type="text"]:focus {
+      border-color: var(--secondary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.2);
+    }
+    
+    /* Buttons */
+    .btn {
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
+      color: var(--white);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(58, 123, 213, 0.2);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .btn-secondary {
+      background: var(--light);
+      color: var(--dark);
+      border: 1px solid var(--light-gray);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--light-gray);
+      box-shadow: none;
+    }
+    
+    .btn-danger {
+      background: linear-gradient(to right, var(--danger), #ff6b6b);
+    }
+    
+    .btn-danger:hover {
+      box-shadow: 0 6px 12px rgba(220, 53, 69, 0.2);
+    }
+    
+    .btn-success {
+      background: linear-gradient(to right, var(--success), #5cb85c);
+    }
+    
+    .btn-success:hover {
+      box-shadow: 0 6px 12px rgba(40, 167, 69, 0.2);
+    }
+    
+    /* Subject Tabs */
+    .subject-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .subject-tabs button {
+      background-color: var(--white);
+      color: var(--primary);
+      border: 1px solid var(--light-gray);
+      padding: 12px 20px;
+      border-radius: 8px;
+      min-width: 140px;
+      font-weight: 500;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .subject-tabs button i {
+      font-size: 1.2rem;
+    }
+    
+    .subject-tabs button:hover {
+      background-color: var(--light);
+    }
+    
+    .subject-tabs button.active-subject {
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
+      color: var(--white);
+      border-color: var(--primary);
+      box-shadow: 0 4px 8px rgba(58, 123, 213, 0.2);
+    }
+    
+    /* Test Box */
+    .test-box {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    
+    .test-box-header {
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
+      color: var(--white);
+      padding: 1.2rem 1.5rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .test-box-body {
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+    }
+    
+    .question-container {
+      order: 1;
+    }
+    
+    .navigation-sidebar {
+      order: 2;
+      background: var(--light);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      height: fit-content;
+      box-shadow: var(--shadow);
+    }
+    
+    .question-counter {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+    
+    .question-text {
+      font-size: 1.2rem;
+      margin-bottom: 1.8rem;
+      color: var(--dark);
+      font-weight: 500;
+      line-height: 1.6;
+      background: var(--light);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+    }
+    
+    .options-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 2rem;
+    }
+    
+    .option {
+      display: flex;
+      align-items: center;
+      padding: 1rem 1.2rem;
+      background-color: var(--light);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      border-left: 4px solid transparent;
+      position: relative;
+    }
+    
+    .option:hover {
+      background-color: var(--light-gray);
+      transform: translateX(5px);
+    }
+    
+    .option input {
+      margin-right: 12px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+    
+    .option.selected {
+      border-left-color: var(--primary);
+      background-color: rgba(58, 123, 213, 0.05);
+    }
+    
+    /* Navigation */
+    .question-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+    
+    /* Horizontal Navigation Buttons */
+    .nav-buttons-horizontal {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 8px;
+      margin-top: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 5px;
+    }
+    
+    .nav-btn-horizontal {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--white);
+      border: 1px solid var(--light-gray);
+      font-weight: 500;
+      transition: var(--transition);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    .nav-btn-horizontal:hover {
+      background-color: var(--light);
+    }
+    
+    .nav-btn-horizontal.answered {
+      background-color: var(--success);
+      color: var(--white);
+      border-color: var(--success);
+    }
+    
+    .nav-btn-horizontal.current {
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
+      color: var(--white);
+      border-color: var(--primary);
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(58, 123, 213, 0.2);
+    }
+    
+    /* Enhanced Submit Button */
+    .submit-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 50;
+    }
+    
+    .btn-submit {
+      background: linear-gradient(to right, var(--danger), #e63946);
+      color: var(--white);
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+    }
+    
+    .btn-submit:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+    }
+    
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+    
+    .submit-confirm {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .confirm-box {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      max-width: 500px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    
+    .confirm-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    /* Result Section */
+    .result-summary {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 2rem;
+      box-shadow: var(--box-shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      text-align: center;
+      position: relative;
+    }
+    
+    .back-to-dashboard {
+      position: absolute;
+      left: 2rem;
+      top: 2rem;
+      background: var(--light);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+    
+    .back-to-dashboard:hover {
+      background: var(--light-gray);
+    }
+    
+    .student-info {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .student-info p {
+      font-size: 1.1rem;
+      color: var(--dark);
+    }
+    
+    .student-info strong {
+      color: var(--primary);
+    }
+    
+    .score-display {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 1.5rem 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .score-display span:first-child {
+      color: var(--success);
+    }
+    
+    .marks-display {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: var(--dark);
+    }
+    
+    .marks-display span {
+      font-weight: 600;
+    }
+    
+    .progress-container {
+      width: 100%;
+      background-color: var(--light-gray);
+      border-radius: 10px;
+      margin: 1.5rem 0;
+      height: 20px;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--success), var(--secondary));
+      transition: width 0.5s ease;
+    }
+    
+    .percentage {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .result-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+    
+    .section-title i {
+      font-size: 1.5rem;
+    }
+    
+    /* Question Result Styles */
+    .question-result {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--light-gray);
+    }
+    
+    .correct {
+      border-left: 5px solid var(--success);
+      background-color: rgba(40, 167, 69, 0.05);
+    }
+    
+    .incorrect {
+      border-left: 5px solid var(--danger);
+      background-color: rgba(220, 53, 69, 0.05);
+    }
+    
+    .unattempted {
+      border-left: 5px solid var(--warning);
+      background-color: rgba(255, 193, 7, 0.05);
+    }
+    
+    .option-result {
+      display: flex;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .correct-answer {
+      background-color: rgba(40, 167, 69, 0.1);
+      border-left: 3px solid var(--success);
+    }
+    
+    .incorrect-answer {
+      background-color: rgba(220, 53, 69, 0.1);
+      border-left: 3px solid var(--danger);
+    }
+    
+    .user-answer {
+      font-weight: 600;
+    }
+    
+    .answer-marker {
+      margin-left: 8px;
+      font-size: 0.9rem;
+    }
+    
+    .correct-marker {
+      color: var(--success);
+    }
+    
+    .incorrect-marker {
+      color: var(--danger);
+    }
+    
+    /* Stats Panel */
+    .stats-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+    }
+    
+    .stat-physics {
+      color: #3a7bd5;
+    }
+    
+    .stat-chemistry {
+      color: #00b09b;
+    }
+    
+    .stat-biology {
+      color: #28a745;
+    }
+    
+    .stat-overall {
+      color: #6f42c1;
+    }
+    
+    .stat-label {
+      font-size: 1.1rem;
+      color: var(--gray);
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .container {
+        padding: 0 1rem;
+      }
+      
+      .login, .test, .result {
+        padding: 1.5rem;
+      }
+      
+      .test-box-body {
+        grid-template-columns: 1fr;
+      }
+      
+      .navigation-sidebar {
+        order: 1;
+      }
+      
+      .question-container {
+        order: 2;
+      }
+      
+      .submit-container {
+        position: static;
+        margin-top: 2rem;
+        text-align: center;
+      }
+      
+      .question-text {
+        font-size: 1.1rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+        gap: 1rem;
+      }
+      
+      #timer {
+        margin-top: 0;
+      }
+      
+      .subject-tabs {
+        flex-direction: column;
+      }
+      
+      .subject-tabs button {
+        width: 100%;
+      }
+      
+      .test-box-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
+      
+      .nav-buttons-horizontal {
+        grid-template-columns: repeat(5, 1fr);
+      }
+      
+      .back-to-dashboard {
+        position: static;
+        margin-bottom: 1rem;
+      }
+      
+      .student-info {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      
+      .question-nav {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .question-nav button {
+        width: 100%;
+      }
+      
+      .stats-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .container {
+        padding: 0 0.5rem;
+      }
+      
+      .login, .test, .result {
+        padding: 1rem;
+      }
+      
+      .score-display {
+        font-size: 2rem;
+      }
+      
+      .result-actions {
+        flex-direction: column;
+      }
+      
+      .result-actions button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">
+    <i class="fas fa-graduation-cap"></i>
+    <h2>TESTIFY</h2>
+  </div>
+  <div id="timer">
+    <i class="fas fa-clock"></i>
+    <span id="time-display">03:00:00</span>
+  </div>
+</div>
+
+<div class="container">
+  <!-- LOGIN SECTION -->
+  <div class="login active" id="login">
+    <h2><i class="fas fa-user-graduate"></i> Welcome to Testify</h2>
+    <p class="welcome-text">Enter your details to begin the NEET practice test</p>
+    <div style="margin-top: 2rem;">
+      <div class="input-group">
+        <label for="name"><i class="fas fa-user"></i> Full Name</label>
+        <input type="text" id="name" placeholder="Enter Your Full Name" required>
+      </div>
+      <div class="input-group">
+        <label for="roll"><i class="fas fa-id-card"></i> Roll Number</label>
+        <input type="text" id="roll" placeholder="Enter Your Roll Number" required>
+      </div>
+      <div style="text-align: center; margin-top: 2rem;">
+        <button class="btn" id="start-test-btn">
+          <i class="fas fa-play"></i> Start Test
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEST SECTION -->
+  <div class="test" id="test">
+    <div class="subject-tabs">
+      <button class="active-subject" id="physics-tab" onclick="switchSubject('physics')">
+        <i class="fas fa-atom"></i> Physics (60)
+      </button>
+      <button id="chemistry-tab" onclick="switchSubject('chemistry')">
+        <i class="fas fa-flask"></i> Chemistry (60)
+      </button>
+      <button id="biology-tab" onclick="switchSubject('biology')">
+        <i class="fas fa-dna"></i> Biology (60)
+      </button>
+    </div>
+    
+    <div class="test-box">
+      <div class="test-box-header">
+        <span id="current-subject">Physics</span>
+        <span class="question-counter">Question <span id="current-question-num">1</span> of <span id="total-questions">60</span></span>
+      </div>
+      <div class="test-box-body">
+        <div class="question-container">
+          <div class="question-text" id="question-text">
+            Loading question...
+          </div>
+          <div class="options-container" id="options-container">
+            <!-- Options will be populated here -->
+          </div>
+          <div class="question-nav">
+            <button class="btn-secondary" id="prev-btn" onclick="prevQ()">
+              <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button class="btn-secondary" id="next-btn" onclick="nextQ()">
+              Next <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="navigation-sidebar">
+          <h4>Question Navigator</h4>
+          <div class="nav-buttons-horizontal" id="navigation-buttons">
+            <!-- Navigation buttons will be populated here -->
+          </div>
+          
+          <div class="submit-container">
+            <button class="btn-submit" onclick="document.getElementById('submit-confirm').style.display = 'flex'">
+              <i class="fas fa-paper-plane"></i> Submit Test
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Confirmation Modal -->
+  <div class="submit-confirm" id="submit-confirm">
+    <div class="confirm-box">
+      <h3>Confirm Submission</h3>
+      <p>Are you sure you want to submit your test? You won't be able to make changes after submission.</p>
+      <div class="confirm-actions">
+        <button class="btn-secondary" onclick="document.getElementById('submit-confirm').style.display = 'none'">
+          Cancel
+        </button>
+        <button class="btn-danger" id="final-submit-btn">
+          Submit Anyway
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT SECTION -->
+  <div class="result" id="result">
+    <button class="back-to-dashboard" onclick="goToDashboard()">
+      <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </button>
+    
+    <div class="result-summary">
+      <h2><i class="fas fa-chart-line"></i> Test Result</h2>
+      
+      <div class="student-info">
+        <p>Student: <strong><span id="student-name">John Doe</span></strong></p>
+        <p>Roll No: <strong><span id="roll-no">NEET2026001</span></strong></p>
+      </div>
+      
+      <div class="score-display">
+        <span id="score">0</span> / <span id="total">720</span>
+      </div>
+      
+      <div class="marks-display">
+        Total Marks: <span id="total-marks">0</span> (Correct: +4, Incorrect: -1)
+      </div>
+      
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+      </div>
+      
+      <p class="percentage" id="percentage">Percentage: 0.00%</p>
+    </div>
+    
+    <div class="stats-panel">
+      <div class="stat-card">
+        <div class="stat-value stat-physics" id="physics-score">0</div>
+        <div class="stat-label">Physics Score</div>
+        <div><span id="physics-correct">0</span> correct, <span id="physics-attempted">0</span> attempted</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value stat-chemistry" id="chemistry-score">0</div>
+        <div class="stat-label">Chemistry Score</div>
+        <div><span id="chemistry-correct">0</span> correct, <span id="chemistry-attempted">0</span> attempted</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value stat-biology" id="biology-score">0</div>
+        <div class="stat-label">Biology Score</div>
+        <div><span id="biology-correct">0</span> correct, <span id="biology-attempted">0</span> attempted</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value stat-overall" id="overall-attempted">0</div>
+        <div class="stat-label">Questions Attempted</div>
+        <div><span id="overall-correct">0</span> correct of <span id="overall-total">180</span></div>
+      </div>
+    </div>
+    
+    <div id="result-panel">
+      <!-- Detailed results will be populated here -->
+    </div>
+    
+    <div class="result-actions">
+      <button class="btn-success" onclick="downloadPDF()">
+        <i class="fas fa-file-pdf"></i> Download Result
+      </button>
+      <button class="btn" onclick="restartTest()">
+        <i class="fas fa-redo"></i> Take Test Again
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// NEET Test Platform with 180 Questions (60 Physics, 60 Chemistry, 60 Biology)
+// NEET Marking Scheme: +4 for correct, -1 for incorrect
+
+// Sample NEET-style questions for all subjects
+const questions = {
+  physics: Array(60).fill().map((_, i) => ({
+    id: `physics-${i+1}`,
+    question: `Physics Question ${i+1}: A particle moves along a straight line OX. At time t (in seconds) the distance x (in metres) of the particle from O is given by x = 40 + 12t - t³. How long would the particle travel before coming to rest?`,
+    options: [
+      `${Math.floor(Math.random()*20) + 10} m`,
+      `${Math.floor(Math.random()*20) + 20} m`,
+      `${Math.floor(Math.random()*20) + 30} m`,
+      `${Math.floor(Math.random()*20) + 40} m`
+    ],
+    correct: Math.floor(Math.random() * 4)
+  })),
+  chemistry: Array(60).fill().map((_, i) => ({
+    id: `chemistry-${i+1}`,
+    question: `Chemistry Question ${i+1}: Which of the following statements is not true about RNA?`,
+    options: [
+      "It has always double stranded α-helix structure",
+      "It usually does not replicate",
+      "It is present in the nucleus of the cell",
+      "It controls the synthesis of protein"
+    ],
+    correct: Math.floor(Math.random() * 4)
+  })),
+  biology: Array(60).fill().map((_, i) => ({
+    id: `biology-${i+1}`,
+    question: `Biology Question ${i+1}: Which of the following is not a feature of the plasmids?`,
+    options: [
+      "Single-stranded",
+      "Independent replication",
+      "Circular structure",
+      "Transferable"
+    ],
+    correct: Math.floor(Math.random() * 4)
+  }))
+};
+
+// DOM Elements
+const loginSection = document.getElementById("login");
+const testSection = document.getElementById("test");
+const resultSection = document.getElementById("result");
+const timerDisplay = document.getElementById("timer");
+const timeDisplay = document.getElementById("time-display");
+const currentSubjectDisplay = document.getElementById("current-subject");
+const currentQuestionNum = document.getElementById("current-question-num");
+const totalQuestions = document.getElementById("total-questions");
+const questionText = document.getElementById("question-text");
+const optionsContainer = document.getElementById("options-container");
+const navigationButtons = document.getElementById("navigation-buttons");
+const prevBtn = document.getElementById("prev-btn");
+const nextBtn = document.getElementById("next-btn");
+const submitConfirmModal = document.getElementById("submit-confirm");
+const finalSubmitBtn = document.getElementById("final-submit-btn");
+const studentName = document.getElementById("student-name");
+const rollNo = document.getElementById("roll-no");
+const scoreDisplay = document.getElementById("score");
+const totalDisplay = document.getElementById("total");
+const totalMarks = document.getElementById("total-marks");
+const progressBar = document.getElementById("progress-bar");
+const percentageDisplay = document.getElementById("percentage");
+const resultPanel = document.getElementById("result-panel");
+
+// Timer variables
+let timerTime = 3 * 60 * 60; // 3 hours in seconds (NEET duration)
+let timerInterval;
+let testSubmitted = false;
+
+// Current test state
+let currentSubject = 'physics';
+let currentIndex = 0;
+let answers = {
+  physics: Array(questions.physics.length).fill(null),
+  chemistry: Array(questions.chemistry.length).fill(null),
+  biology: Array(questions.biology.length).fill(null)
+};
+
+// Initialize the test
+function initTest() {
+  // Set up subject tabs
+  document.getElementById('physics-tab').addEventListener('click', () => switchSubject('physics'));
+  document.getElementById('chemistry-tab').addEventListener('click', () => switchSubject('chemistry'));
+  document.getElementById('biology-tab').addEventListener('click', () => switchSubject('biology'));
+  
+  // Set up navigation buttons
+  prevBtn.addEventListener('click', prevQ);
+  nextBtn.addEventListener('click', nextQ);
+  
+  // Set up modal buttons
+  document.querySelector('.confirm-actions .btn-secondary').addEventListener('click', 
+    () => submitConfirmModal.style.display = 'none');
+  finalSubmitBtn.addEventListener('click', submitTest);
+  
+  // Set up result actions
+  document.querySelector('.result-actions .btn-success').addEventListener('click', downloadPDF);
+  document.querySelector('.result-actions .btn').addEventListener('click', restartTest);
+  
+  // Set up back to dashboard
+  document.querySelector('.back-to-dashboard').addEventListener('click', goToDashboard);
+  
+  // Set up start test button
+  document.getElementById('start-test-btn').addEventListener('click', startTest);
+  
+  // Initialize navigation
+  createNavigationButtons();
+}
+
+// Create navigation buttons for all questions
+function createNavigationButtons() {
+  navigationButtons.innerHTML = '';
+  
+  // Create buttons for the current subject
+  const subjectQuestions = questions[currentSubject];
+  for (let i = 0; i < subjectQuestions.length; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'nav-btn-horizontal';
+    btn.textContent = i + 1;
+    btn.dataset.index = i;
+    
+    // Check if this question has been answered
+    if (answers[currentSubject][i] !== null) {
+      btn.classList.add('answered');
+    }
+    
+    // Highlight current question
+    if (i === currentIndex) {
+      btn.classList.add('current');
+    }
+    
+    btn.addEventListener('click', () => {
+      currentIndex = i;
+      displayQuestion();
+      updateNavigationButtons();
+    });
+    
+    navigationButtons.appendChild(btn);
+  }
+}
+
+// Update navigation buttons styling
+function updateNavigationButtons() {
+  const buttons = navigationButtons.querySelectorAll('.nav-btn-horizontal');
+  buttons.forEach((btn, i) => {
+    btn.classList.remove('current');
+    btn.classList.remove('answered');
+    
+    if (i === currentIndex) {
+      btn.classList.add('current');
+    }
+    
+    if (answers[currentSubject][i] !== null) {
+      btn.classList.add('answered');
+    }
+  });
+}
+
+// Switch between subjects
+function switchSubject(subject) {
+  // Save current index for the current subject
+  if (currentSubject) {
+    answers[currentSubject][currentIndex] = getSelectedOption();
+  }
+  
+  // Update UI for subject tabs
+  document.querySelectorAll('.subject-tabs button').forEach(btn => {
+    btn.classList.remove('active-subject');
+  });
+  document.getElementById(`${subject}-tab`).classList.add('active-subject');
+  
+  // Set new subject
+  currentSubject = subject;
+  currentIndex = 0;
+  currentSubjectDisplay.textContent = subject.charAt(0).toUpperCase() + subject.slice(1);
+  totalQuestions.textContent = questions[subject].length;
+  
+  // Display the first question
+  displayQuestion();
+  createNavigationButtons();
+}
+
+// Display current question
+function displayQuestion() {
+  const question = questions[currentSubject][currentIndex];
+  
+  if (!question) return;
+  
+  // Update question counter
+  currentQuestionNum.textContent = currentIndex + 1;
+  
+  // Set question text
+  questionText.textContent = question.question;
+  
+  // Clear previous options
+  optionsContainer.innerHTML = '';
+  
+  // Create new options
+  question.options.forEach((option, index) => {
+    const optionElement = document.createElement('label');
+    optionElement.className = 'option';
+    if (answers[currentSubject][currentIndex] === index) {
+      optionElement.classList.add('selected');
+    }
+    
+    optionElement.innerHTML = `
+      <input type="radio" name="option" value="${index}" 
+        ${answers[currentSubject][currentIndex] === index ? 'checked' : ''}>
+      ${option}
+    `;
+    
+    optionElement.addEventListener('click', () => {
+      // Remove selected class from all options
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      
+      // Add selected class to clicked option
+      optionElement.classList.add('selected');
+      
+      // Save answer
+      answers[currentSubject][currentIndex] = index;
+      
+      // Update navigation buttons
+      updateNavigationButtons();
+    });
+    
+    optionsContainer.appendChild(optionElement);
+  });
+  
+  // Update navigation buttons
+  updateNavigationButtons();
+  
+  // Update button states
+  prevBtn.disabled = currentIndex === 0;
+  nextBtn.disabled = currentIndex === questions[currentSubject].length - 1;
+}
+
+// Get currently selected option
+function getSelectedOption() {
+  const selectedOption = document.querySelector('input[name="option"]:checked');
+  return selectedOption ? parseInt(selectedOption.value) : null;
+}
+
+// Go to previous question
+function prevQ() {
+  // Save current answer
+  answers[currentSubject][currentIndex] = getSelectedOption();
+  
+  if (currentIndex > 0) {
+    currentIndex--;
+    displayQuestion();
+  }
+}
+
+// Go to next question
+function nextQ() {
+  // Save current answer
+  answers[currentSubject][currentIndex] = getSelectedOption();
+  
+  if (currentIndex < questions[currentSubject].length - 1) {
+    currentIndex++;
+    displayQuestion();
+  }
+}
+
+// Start the test
+function startTest() {
+  const name = document.getElementById("name").value.trim();
+  const roll = document.getElementById("roll").value.trim();
+  
+  if (!name || !roll) {
+    alert("Please enter both your name and roll number.");
+    return;
+  }
+
+  studentName.textContent = name;
+  rollNo.textContent = roll;
+
+  // Switch sections
+  loginSection.classList.remove("active");
+  testSection.classList.add("active");
+
+  // Initialize first subject
+  switchSubject('physics');
+
+  // Start timer
+  updateTimerDisplay();
+  timerInterval = setInterval(updateTimer, 1000);
+  
+  // Setup enhanced submit button
+  setupSubmitButton();
+}
+
+// Timer functions
+function updateTimer() {
+  if (testSubmitted) return;
+  
+  timerTime--;
+  
+  if (timerTime <= 0) {
+    clearInterval(timerInterval);
+    timerDisplay.classList.add('timer-ended');
+    timeDisplay.textContent = "00:00:00";
+    submitTest();
+    return;
+  }
+  
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+  const hours = Math.floor(timerTime / 3600);
+  const minutes = Math.floor((timerTime % 3600) / 60);
+  const seconds = timerTime % 60;
+  
+  timeDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  
+  // Add warning when time is low
+  if (timerTime <= 600) { // 10 minutes
+    timerDisplay.style.backgroundColor = 'rgba(255, 193, 7, 0.3)';
+  }
+}
+
+// Enhanced submit button functionality
+function setupSubmitButton() {
+  const submitBtn = document.querySelector('.btn-submit');
+  
+  submitBtn.addEventListener('mouseenter', function() {
+    this.innerHTML = '<i class="fas fa-exclamation-circle"></i> Final Submission';
+    this.style.backgroundColor = '#e63946';
+  });
+  
+  submitBtn.addEventListener('mouseleave', function() {
+    this.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Test';
+    this.style.backgroundColor = '';
+  });
+  
+  // Add pulse animation when time is running low
+  const checkTimeAndPulse = () => {
+    if (timerTime <= 600 && !testSubmitted) { // 10 minutes left
+      submitBtn.style.animation = 'pulse 1.5s infinite';
+      submitBtn.style.boxShadow = '0 0 0 10px rgba(220, 53, 69, 0.4)';
+    } else {
+      submitBtn.style.animation = '';
+      submitBtn.style.boxShadow = '';
+    }
+  };
+  
+  // Check every minute
+  setInterval(checkTimeAndPulse, 60000);
+}
+
+// Submit the test
+function submitTest() {
+  testSubmitted = true;
+  clearInterval(timerInterval);
+  
+  // Save current answer
+  answers[currentSubject][currentIndex] = getSelectedOption();
+  
+  // Hide submit modal
+  submitConfirmModal.style.display = 'none';
+  
+  // Switch to results
+  testSection.classList.remove("active");
+  resultSection.classList.add("active");
+  
+  // Calculate and display results
+  calculateResults();
+}
+
+// Calculate test results
+function calculateResults() {
+  let totalScore = 0;
+  let totalMarksValue = 0;
+  let physicsScore = 0;
+  let chemistryScore = 0;
+  let biologyScore = 0;
+  let physicsAttempted = 0;
+  let chemistryAttempted = 0;
+  let biologyAttempted = 0;
+  let physicsCorrect = 0;
+  let chemistryCorrect = 0;
+  let biologyCorrect = 0;
+  let overallAttempted = 0;
+  let overallCorrect = 0;
+  
+  // Calculate physics results
+  questions.physics.forEach((q, i) => {
+    if (answers.physics[i] !== null) {
+      physicsAttempted++;
+      overallAttempted++;
+      if (answers.physics[i] === q.correct) {
+        physicsScore += 4;
+        physicsCorrect++;
+        overallCorrect++;
+      } else {
+        physicsScore -= 1;
+      }
+    }
+  });
+  
+  // Calculate chemistry results
+  questions.chemistry.forEach((q, i) => {
+    if (answers.chemistry[i] !== null) {
+      chemistryAttempted++;
+      overallAttempted++;
+      if (answers.chemistry[i] === q.correct) {
+        chemistryScore += 4;
+        chemistryCorrect++;
+        overallCorrect++;
+      } else {
+        chemistryScore -= 1;
+      }
+    }
+  });
+  
+  // Calculate biology results
+  questions.biology.forEach((q, i) => {
+    if (answers.biology[i] !== null) {
+      biologyAttempted++;
+      overallAttempted++;
+      if (answers.biology[i] === q.correct) {
+        biologyScore += 4;
+        biologyCorrect++;
+        overallCorrect++;
+      } else {
+        biologyScore -= 1;
+      }
+    }
+  });
+  
+  // Calculate totals
+  totalScore = physicsScore + chemistryScore + biologyScore;
+  totalMarksValue = totalScore;
+  const percentage = ((totalScore / 720) * 100).toFixed(2);
+  
+  // Update result display
+  scoreDisplay.textContent = totalScore;
+  totalMarks.textContent = totalMarksValue;
+  percentageDisplay.textContent = `Percentage: ${percentage}%`;
+  progressBar.style.width = `${percentage}%`;
+  
+  // Update subject stats
+  document.getElementById('physics-score').textContent = physicsScore;
+  document.getElementById('physics-attempted').textContent = physicsAttempted;
+  document.getElementById('physics-correct').textContent = physicsCorrect;
+  
+  document.getElementById('chemistry-score').textContent = chemistryScore;
+  document.getElementById('chemistry-attempted').textContent = chemistryAttempted;
+  document.getElementById('chemistry-correct').textContent = chemistryCorrect;
+  
+  document.getElementById('biology-score').textContent = biologyScore;
+  document.getElementById('biology-attempted').textContent = biologyAttempted;
+  document.getElementById('biology-correct').textContent = biologyCorrect;
+  
+  document.getElementById('overall-attempted').textContent = overallAttempted;
+  document.getElementById('overall-correct').textContent = overallCorrect;
+  
+  // Display detailed results
+  displayDetailedResults();
+}
+
+// Display detailed question results
+function displayDetailedResults() {
+  resultPanel.innerHTML = '';
+  
+  // Add section for Physics
+  addSubjectResults('physics', 'Physics', 'fas fa-atom');
+  
+  // Add section for Chemistry
+  addSubjectResults('chemistry', 'Chemistry', 'fas fa-flask');
+  
+  // Add section for Biology
+  addSubjectResults('biology', 'Biology', 'fas fa-dna');
+}
+
+function addSubjectResults(subject, subjectName, icon) {
+  const section = document.createElement('div');
+  section.innerHTML = `
+    <div class="section-title">
+      <i class="${icon}"></i>
+      <h3>${subjectName.toUpperCase()} RESULTS</h3>
+    </div>
+  `;
+  
+  resultPanel.appendChild(section);
+  
+  // Add each question result
+  questions[subject].forEach((q, i) => {
+    const userAnswer = answers[subject][i];
+    const isCorrect = userAnswer === q.correct;
+    const isAttempted = userAnswer !== null;
+    
+    const questionResult = document.createElement('div');
+    questionResult.className = 'question-result';
+    
+    if (isAttempted) {
+      questionResult.classList.add(isCorrect ? 'correct' : 'incorrect');
+    } else {
+      questionResult.classList.add('unattempted');
+    }
+    
+    let resultHTML = `<p><strong>Q${i+1}:</strong> ${q.question}</p><div class="options-result">`;
+    
+    q.options.forEach((option, optIndex) => {
+      let optionClass = '';
+      let marker = '';
+      
+      if (optIndex === q.correct) {
+        optionClass = 'correct-answer';
+      }
+      
+      if (userAnswer === optIndex) {
+        optionClass += ' user-answer';
+        marker = `<span class="answer-marker ${isCorrect ? 'correct-marker' : 'incorrect-marker'}">${isCorrect ? '✓ Your correct answer (+4)' : '✗ Your incorrect answer (-1)'}</span>`;
+      }
+      
+      resultHTML += `
+        <div class="option-result ${optionClass}">
+          ${option} ${marker}
+        </div>
+      `;
+    });
+    
+    resultHTML += '</div>';
+    
+    questionResult.innerHTML = resultHTML;
+    resultPanel.appendChild(questionResult);
+  });
+}
+
+// Download PDF
+function downloadPDF() {
+  alert('PDF download functionality would be implemented here with jsPDF library');
+}
+
+// Restart test
+function restartTest() {
+  // Reset answers
+  answers = {
+    physics: Array(questions.physics.length).fill(null),
+    chemistry: Array(questions.chemistry.length).fill(null),
+    biology: Array(questions.biology.length).fill(null)
+  };
+  
+  // Reset timer
+  timerTime = 3 * 60 * 60;
+  testSubmitted = false;
+  
+  // Switch to test section
+  resultSection.classList.remove("active");
+  testSection.classList.add("active");
+  
+  // Reset subject and index
+  currentSubject = 'physics';
+  currentIndex = 0;
+  
+  // Reset timer display
+  timerDisplay.classList.remove('timer-ended');
+  timerDisplay.style.backgroundColor = '';
+  
+  // Start the test again
+  switchSubject('physics');
+  updateTimerDisplay();
+  timerInterval = setInterval(updateTimer, 1000);
+}
+
+// Go to dashboard
+function goToDashboard() {
+  alert('Dashboard functionality would be implemented here');
+}
+
+// Add pulse animation to CSS
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+  }
+`;
+document.head.appendChild(style);
+
+// Initialize the test when page loads
+window.addEventListener('DOMContentLoaded', initTest);
+</script>
+</body>
+</html>

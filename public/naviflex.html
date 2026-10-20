@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        
+        ul
+        {
+            padding: 25px;
+            display: block;
+        }
+        header
+        {
+            background-color: rgb(231, 231, 121);
+            position: fixed;
+            display: block;
+            width: 100%;
+        }
+        li
+        {
+            text-decoration: none;
+            display: inline;
+            
+            color: aliceblue;
+            padding: 0px 45px;
+        }
+
+        .container
+        {
+            display: flex;
+            justify-content:center;
+            height: 1200px;
+            width: 100%;
+            flex-direction: column;
+            
+        }
+
+        .log
+        {
+            background-image: url("foodbg1.jpg.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            
+            height: 100%;
+        }
+        
+        .footer
+        {
+           background-color: black;
+            background-repeat: no-repeat;
+            background-size: cover;
+            
+            height: 800px;
+        }
+        #btnbg
+        {
+            float:right;
+            background-color: azure;
+            border-radius: 20px;
+            max-width: 60px;
+            height: 20px;
+            padding-left: 0%;
+            
+        }
+        #btn
+        {
+            border-radius: 100%;
+            float: left;
+            height: inherit;
+            width: 20px;
+            margin: 0%;
+            border-color: rgb(227, 112, 12);
+            border-width: 3px;
+        }
+
+        #btn:active
+        {
+            transform: translateX(42px);
+            
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li>
+                    home
+                </li>
+                <li>
+                    About
+                </li>
+                <li>
+                    Contact
+                </li>
+                <li id="btnbg"><button id="btn"></button></li>
+            </ul>
+            
+        </nav>
+    </header>
+    <div class="container">
+     <div class="log">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci ex natus, nobis dicta officiis quae distinctio. Explicabo porro distinctio neque voluptates ex eos quisquam temporibus assumenda rerum sed, quos veniam, facilis repellat error architecto.
+     </div>
+    
+    </div>
+    <footer class="footer">
+     Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci dolorum, dignissimos esse in exercitationem vitae dicta maxime alias, harum pariatur dolores quos autem libero. Repellat quam veniam fugit tempore, assumenda fugiat at illum facilis autem natus enim laudantium quo expedita, cumque porro. Illum esse vitae, dolorum alias consectetur consequuntur quo sed voluptate repellat molestias error ex rem magnam quidem cumque ullam ut minus est. Placeat.
+    </footer>
+
+</body>
+</html>

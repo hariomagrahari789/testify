@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Settings | EduPlatform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>User Settings</h2>
+    <form class="form-box">
+      <div class="card">
+        <h3>👤 Profile Info</h3>
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" value="John Doe" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="john@example.com" required />
+      </div>
+
+      <div class="card">
+        <h3>🔐 Password</h3>
+        <label for="current-password">Current Password</label>
+        <input type="password" id="current-password" />
+
+        <label for="new-password">New Password</label>
+        <input type="password" id="new-password" />
+
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" />
+      </div>
+
+      <div class="card">
+        <h3>⚙️ Preferences</h3>
+        <label><input type="checkbox" id="notifications" checked /> Receive Email Notifications</label>
+        <label><input type="checkbox" id="dark-mode-toggle" /> Enable Dark Mode</label>
+      </div>
+
+      <button type="submit">Save Changes</button>
+      <button type="button" onclick="window.location.href='logind.html'" class="logout-button">Login</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

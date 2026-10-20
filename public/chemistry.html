@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Study Material</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            animation: fadeIn 1s ease;
+        }
+        
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #f0f0f0;
+            line-height: 1.6;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .chapters-panel {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 25px;
+            animation: slideInLeft 0.8s ease;
+        }
+        
+        .content-area {
+            flex: 3;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+            animation: slideInRight 0.8s ease;
+        }
+        
+        .chapters-panel h2, .content-area h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        
+        .chapter-list {
+            list-style: none;
+        }
+        
+        .chapter-item {
+            padding: 18px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #3498db;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chapter-item:hover {
+            background: #e3f2fd;
+            transform: translateX(5px);
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .chapter-item.active {
+            background: #d1ecff;
+            border-left: 4px solid #e74c3c;
+            font-weight: bold;
+        }
+        
+        .chapter-icon {
+            width: 40px;
+            height: 40px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .notes-content {
+            line-height: 1.8;
+        }
+        
+        .notes-content h3 {
+            color: #2c3e50;
+            margin: 25px 0 15px;
+            font-size: 1.5rem;
+        }
+        
+        .notes-content p {
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+        
+        .notes-content ul {
+            padding-left: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .notes-content li {
+            margin-bottom: 10px;
+        }
+        
+        .formula {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            border-left: 4px solid #3498db;
+        }
+        
+        .download-section {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .download-btn {
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(to right, #2c3e50, #3498db);
+        }
+        
+        .chapter-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            margin-top: 40px;
+            font-size: 1.1rem;
+        }
+        
+        .key-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .key-point {
+            flex: 1;
+            min-width: 200px;
+            background: #d1ecff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .key-point h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            header h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-atom"></i> TESTIFY Study Material</h1>
+            <p>Comprehensive notes for key chemistry topics. Select a chapter to view study material and download notes for offline use.</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="chapters-panel">
+                <h2><i class="fas fa-book-open"></i> Chapters</h2>
+                <ul class="chapter-list">
+                    <li class="chapter-item active" data-chapter="atomic">
+                        <div class="chapter-icon">1</div>
+                        <div>Atomic Structure</div>
+                    </li>
+                    <li class="chapter-item" data-chapter="bonding">
+                        <div class="chapter-icon">2</div>
+                        <div>Chemical Bonding</div>
+                    </li>
+                    <li class="chapter-item" data-chapter="thermo">
+                        <div class="chapter-icon">3</div>
+                        <div>Thermodynamics</div>
+                    </li>
+                    <li class="chapter-item" data-chapter="kinetics">
+                        <div class="chapter-icon">4</div>
+                        <div>Chemical Kinetics</div>
+                    </li>
+                    <li class="chapter-item" data-chapter="equilibrium">
+                        <div class="chapter-icon">5</div>
+                        <div>Chemical Equilibrium</div>
+                    </li>
+                    <li class="chapter-item" data-chapter="organic">
+                        <div class="chapter-icon">6</div>
+                        <div>Organic Chemistry</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="content-area">
+                <div class="notes-content" id="notesContent">
+                    <h2 id="chapterTitle">Atomic Structure</h2>
+                    <img src="https://images.unsplash.com/photo-1615800098746-73af8261e3df?auto=format&fit=crop&w=800" alt="Atomic Structure" class="chapter-image">
+                    
+                    <h3>Fundamental Concepts</h3>
+                    <p>Atoms are the basic building blocks of matter. They consist of three main subatomic particles:</p>
+                    <ul>
+                        <li><strong>Protons</strong>: Positively charged particles in the nucleus</li>
+                        <li><strong>Neutrons</strong>: Neutral particles in the nucleus</li>
+                        <li><strong>Electrons</strong>: Negatively charged particles orbiting the nucleus</li>
+                    </ul>
+                    
+                    <div class="key-points">
+                        <div class="key-point">
+                            <h4>Atomic Number (Z)</h4>
+                            <p>Number of protons in an atom's nucleus. Determines the element.</p>
+                        </div>
+                        <div class="key-point">
+                            <h4>Mass Number (A)</h4>
+                            <p>Sum of protons and neutrons in the nucleus.</p>
+                        </div>
+                        <div class="key-point">
+                            <h4>Isotopes</h4>
+                            <p>Atoms of the same element with different numbers of neutrons.</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Electron Configuration</h3>
+                    <p>Electrons are arranged in energy levels (shells) around the nucleus. Each shell has subshells (s, p, d, f) with specific orbitals.</p>
+                    
+                    <div class="formula">
+                        Aufbau Principle: Electrons fill orbitals starting with the lowest energy level<br>
+                        Pauli Exclusion Principle: Each orbital holds max 2 electrons with opposite spins<br>
+                        Hund's Rule: Electrons fill orbitals singly before pairing
+                    </div>
+                    
+                    <h3>Quantum Mechanical Model</h3>
+                    <p>Describes electrons as both particles and waves. Key concepts:</p>
+                    <ul>
+                        <li>Electrons exist in orbitals (probability clouds)</li>
+                        <li>Each electron has a unique set of quantum numbers</li>
+                        <li>Heisenberg Uncertainty Principle: Impossible to know position and momentum simultaneously</li>
+                    </ul>
+                    
+                    <div class="download-section">
+                        <h3><i class="fas fa-download"></i> Download Notes</h3>
+                        <p>Get a PDF version of these notes for offline study</p>
+                        <button class="download-btn" id="downloadBtn">
+                            <i class="fas fa-file-pdf"></i> Download Chapter Notes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Chemistry Study Material &copy; 2026 | Created with ❤️ for students</p>
+            <p>All content is for educational purposes only</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chapterItems = document.querySelectorAll('.chapter-item');
+            const notesContent = document.getElementById('notesContent');
+            const chapterTitle = document.getElementById('chapterTitle');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            // Chapter data
+            const chapters = {
+                atomic: {
+                    title: "Atomic Structure",
+                    content: `
+                        <h2 id="chapterTitle">Atomic Structure</h2>
+                        <img src="https://images.unsplash.com/photo-1615800098746-73af8261e3df?auto=format&fit=crop&w=800" alt="Atomic Structure" class="chapter-image">
+                        
+                        <h3>Fundamental Concepts</h3>
+                        <p>Atoms are the basic building blocks of matter. They consist of three main subatomic particles:</p>
+                        <ul>
+                            <li><strong>Protons</strong>: Positively charged particles in the nucleus</li>
+                            <li><strong>Neutrons</strong>: Neutral particles in the nucleus</li>
+                            <li><strong>Electrons</strong>: Negatively charged particles orbiting the nucleus</li>
+                        </ul>
+                        
+                        <div class="key-points">
+                            <div class="key-point">
+                                <h4>Atomic Number (Z)</h4>
+                                <p>Number of protons in an atom's nucleus. Determines the element.</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>Mass Number (A)</h4>
+                                <p>Sum of protons and neutrons in the nucleus.</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>Isotopes</h4>
+                                <p>Atoms of the same element with different numbers of neutrons.</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Electron Configuration</h3>
+                        <p>Electrons are arranged in energy levels (shells) around the nucleus. Each shell has subshells (s, p, d, f) with specific orbitals.</p>
+                        
+                        <div class="formula">
+                            Aufbau Principle: Electrons fill orbitals starting with the lowest energy level<br>
+                            Pauli Exclusion Principle: Each orbital holds max 2 electrons with opposite spins<br>
+                            Hund's Rule: Electrons fill orbitals singly before pairing
+                        </div>
+                        
+                        <h3>Quantum Mechanical Model</h3>
+                        <p>Describes electrons as both particles and waves. Key concepts:</p>
+                        <ul>
+                            <li>Electrons exist in orbitals (probability clouds)</li>
+                            <li>Each electron has a unique set of quantum numbers</li>
+                            <li>Heisenberg Uncertainty Principle: Impossible to know position and momentum simultaneously</li>
+                        </ul>
+                    `
+                },
+                bonding: {
+                    title: "Chemical Bonding",
+                    content: `
+                        <h2 id="chapterTitle">Chemical Bonding</h2>
+                        <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=800" alt="Chemical Bonding" class="chapter-image">
+                        
+                        <h3>Types of Chemical Bonds</h3>
+                        <p>Chemical bonds form when atoms interact to achieve stable electron configurations:</p>
+                        
+                        <div class="key-points">
+                            <div class="key-point">
+                                <h4>Ionic Bonds</h4>
+                                <p>Formed by transfer of electrons between metals and non-metals. Results in ions held by electrostatic forces.</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>Covalent Bonds</h4>
+                                <p>Formed by sharing of electron pairs between atoms. Can be polar or non-polar.</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>Metallic Bonds</h4>
+                                <p>Electron sea model with delocalized electrons in metal structures.</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Lewis Structures</h3>
+                        <p>Diagrams that show bonding between atoms and lone pairs of electrons:</p>
+                        <ul>
+                            <li>Valence electrons are represented as dots</li>
+                            <li>Bonds are shown as lines between atoms</li>
+                            <li>Octet rule: Atoms tend to have 8 electrons in valence shell</li>
+                        </ul>
+                        
+                        <div class="formula">
+                            VSEPR Theory: Valence Shell Electron Pair Repulsion theory predicts molecular geometry<br>
+                            Bond Order: Number of chemical bonds between two atoms<br>
+                            Bond Energy: Energy required to break a bond
+                        </div>
+                    `
+                },
+                thermo: {
+                    title: "Thermodynamics",
+                    content: `
+                        <h2 id="chapterTitle">Thermodynamics</h2>
+                        <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?auto=format&fit=crop&w=800" alt="Thermodynamics" class="chapter-image">
+                        
+                        <h3>Laws of Thermodynamics</h3>
+                        <div class="key-points">
+                            <div class="key-point">
+                                <h4>First Law</h4>
+                                <p>Energy cannot be created or destroyed, only transformed. ΔU = Q - W</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>Second Law</h4>
+                                <p>Entropy of an isolated system always increases. ΔS ≥ 0</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>Third Law</h4>
+                                <p>Entropy of a perfect crystal approaches zero at absolute zero.</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Key Concepts</h3>
+                        <ul>
+                            <li><strong>Enthalpy (H)</strong>: Heat content of a system at constant pressure</li>
+                            <li><strong>Entropy (S)</strong>: Measure of disorder or randomness</li>
+                            <li><strong>Gibbs Free Energy (G)</strong>: Predicts spontaneity of reactions (ΔG = ΔH - TΔS)</li>
+                        </ul>
+                        
+                        <div class="formula">
+                            Hess's Law: The total enthalpy change is independent of the reaction pathway<br>
+                            Standard State: 298 K, 1 atm, 1 M concentration<br>
+                            ΔG° = -RT lnK (Relationship between free energy and equilibrium constant)
+                        </div>
+                        
+                        <h3>Thermochemical Equations</h3>
+                        <p>Include energy changes with chemical equations:</p>
+                        <p>Example: CH₄(g) + 2O₂(g) → CO₂(g) + 2H₂O(l) ΔH = -890 kJ</p>
+                    `
+                },
+                kinetics: {
+                    title: "Chemical Kinetics",
+                    content: `
+                        <h2 id="chapterTitle">Chemical Kinetics</h2>
+                        <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800" alt="Chemical Kinetics" class="chapter-image">
+                        
+                        <h3>Reaction Rates</h3>
+                        <p>The speed at which chemical reactions occur. Factors affecting reaction rates:</p>
+                        <ul>
+                            <li>Concentration of reactants</li>
+                            <li>Temperature</li>
+                            <li>Surface area</li>
+                            <li>Catalysts</li>
+                            <li>Nature of reactants</li>
+                        </ul>
+                        
+                        <h3>Rate Laws</h3>
+                        <p>Mathematical expressions that relate reaction rate to concentrations:</p>
+                        <div class="formula">
+                            For a reaction: aA + bB → products<br>
+                            Rate = k[A]ᵐ[B]ⁿ<br>
+                            where k is the rate constant, and m and n are reaction orders
+                        </div>
+                        
+                        <div class="key-points">
+                            <div class="key-point">
+                                <h4>Zero Order</h4>
+                                <p>Rate is independent of concentration. Units: mol/L·s</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>First Order</h4>
+                                <p>Rate proportional to one concentration. Units: s⁻¹</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>Second Order</h4>
+                                <p>Rate proportional to two concentrations. Units: L/mol·s</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Reaction Mechanisms</h3>
+                        <p>Step-by-step sequence of elementary reactions by which overall reaction occurs:</p>
+                        <ul>
+                            <li>Elementary steps: Individual reaction steps</li>
+                            <li>Molecularity: Number of molecules participating in an elementary step</li>
+                            <li>Rate-determining step: Slowest step in the mechanism</li>
+                        </ul>
+                    `
+                },
+                equilibrium: {
+                    title: "Chemical Equilibrium",
+                    content: `
+                        <h2 id="chapterTitle">Chemical Equilibrium</h2>
+                        <img src="https://images.unsplash.com/photo-1569868144650-5006b36d5a3a?auto=format&fit=crop&w=800" alt="Chemical Equilibrium" class="chapter-image">
+                        
+                        <h3>Dynamic Equilibrium</h3>
+                        <p>State where forward and reverse reactions occur at equal rates:</p>
+                        <ul>
+                            <li>Concentrations remain constant</li>
+                            <li>Occurs in closed systems</li>
+                            <li>Macroscopic properties are constant</li>
+                        </ul>
+                        
+                        <div class="formula">
+                            For a general reaction: aA + bB ⇌ cC + dD<br>
+                            Equilibrium constant: K = [C]ᶜ[D]ᵈ / [A]ᵃ[B]ᵇ
+                        </div>
+                        
+                        <h3>Equilibrium Constants</h3>
+                        <div class="key-points">
+                            <div class="key-point">
+                                <h4>Kc</h4>
+                                <p>Concentration equilibrium constant (for solutions)</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>Kp</h4>
+                                <p>Partial pressure equilibrium constant (for gases)</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>K vs Q</h4>
+                                <p>K is at equilibrium, Q is reaction quotient at any point</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Le Chatelier's Principle</h3>
+                        <p>When a system at equilibrium is disturbed, it responds to minimize the change:</p>
+                        <ul>
+                            <li>Concentration changes: System shifts to oppose change</li>
+                            <li>Pressure changes: Shifts to side with fewer moles of gas</li>
+                            <li>Temperature changes: Endothermic reactions favored by increase</li>
+                            <li>Catalysts: Speed up both forward and reverse reactions equally</li>
+                        </ul>
+                    `
+                },
+                organic: {
+                    title: "Organic Chemistry",
+                    content: `
+                        <h2 id="chapterTitle">Organic Chemistry</h2>
+                        <img src="https://images.unsplash.com/photo-1561484930-974554019ade?auto=format&fit=crop&w=800" alt="Organic Chemistry" class="chapter-image">
+                        
+                        <h3>Hydrocarbons</h3>
+                        <p>Compounds containing only carbon and hydrogen:</p>
+                        <div class="key-points">
+                            <div class="key-point">
+                                <h4>Alkanes</h4>
+                                <p>Saturated hydrocarbons with single bonds (C-C)</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>Alkenes</h4>
+                                <p>Unsaturated with at least one double bond (C=C)</p>
+                            </div>
+                            <div class="key-point">
+                                <h4>Alkynes</h4>
+                                <p>Unsaturated with at least one triple bond (C≡C)</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Functional Groups</h3>
+                        <p>Atoms or groups of atoms that determine chemical behavior:</p>
+                        <ul>
+                            <li>Alcohols (-OH)</li>
+                            <li>Carboxylic acids (-COOH)</li>
+                            <li>Amines (-NH₂)</li>
+                            <li>Esters (-COOR)</li>
+                            <li>Amides (-CONH₂)</li>
+                            <li>Aldehydes (-CHO)</li>
+                            <li>Ketones (-CO-)</li>
+                        </ul>
+                        
+                        <div class="formula">
+                            IUPAC Nomenclature Rules:<br>
+                            1. Identify longest carbon chain<br>
+                            2. Number chain to give substituents lowest numbers<br>
+                            3. Name substituents alphabetically<br>
+                            4. Assign position numbers to substituents
+                        </div>
+                        
+                        <h3>Reaction Types</h3>
+                        <ul>
+                            <li><strong>Substitution</strong>: Atom/group replaces another</li>
+                            <li><strong>Addition</strong>: Atoms add to double/triple bonds</li>
+                            <li><strong>Elimination</strong>: Removal of atoms to form double bond</li>
+                            <li><strong>Oxidation-Reduction</strong>: Change in oxidation state</li>
+                        </ul>
+                    `
+                }
+            };
+            
+            // Set active chapter
+            chapterItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all items
+                    chapterItems.forEach(i => i.classList.remove('active'));
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Get chapter data
+                    const chapterId = this.getAttribute('data-chapter');
+                    const chapter = chapters[chapterId];
+                    
+                    // Update content
+                    chapterTitle.textContent = chapter.title;
+                    notesContent.innerHTML = chapter.content + `
+                        <div class="download-section">
+                            <h3><i class="fas fa-download"></i> Download Notes</h3>
+                            <p>Get a PDF version of these notes for offline study</p>
+                            <button class="download-btn" id="downloadBtn">
+                                <i class="fas fa-file-pdf"></i> Download Chapter Notes
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Reattach download button event
+                    document.getElementById('downloadBtn').addEventListener('click', downloadNotes);
+                });
+            });
+            
+            // Download button functionality
+            downloadBtn.addEventListener('click', downloadNotes);
+            
+            function downloadNotes() {
+                const activeChapter = document.querySelector('.chapter-item.active');
+                const chapterId = activeChapter.getAttribute('data-chapter');
+                const chapter = chapters[chapterId];
+                
+                alert(`Downloading "${chapter.title}" notes as PDF...\n\n(In a real application, this would generate and download a PDF file)`);
+            }
+        });
+    </script>
+</body>
+</html>

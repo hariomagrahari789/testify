@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NTA Test Platform</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #538184;
+      --secondary: #91c58c;
+      --accent: #e74c3c;
+      --light: #ecf0f1;
+      --dark: #80aad3;
+      --success: #40e183;
+      --danger: #e03d2b;
+      --warning: #ea950c;
+      --info: #a9eb3f;
+      --admin: #8e44ad;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f7fa;
+      color: #6f7f9b;
+      line-height: 1.6;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #a8d6d7, #3b5254);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(249, 5, 5, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .header h2 {
+      font-weight: 600;
+      font-size: 1.8rem;
+    }
+    
+    #timer {
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    .login, .test, .result, .admin {
+      display: none;
+      background: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    h2, h3, h4 {
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    
+    input[type="text"]:focus {
+      border-color: var(--secondary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+    
+    button {
+      background-color: var(--secondary);
+      color: rgb(17, 13, 13);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.3s;
+      margin: 5px;
+    }
+    
+    button:hover {
+      background-color: #71bfff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    .subject-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .subject-tabs button {
+      background-color: white;
+      color: var(--dark);
+      border: 1px solid #ddd;
+      margin: 0.5rem;
+      min-width: 120px;
+    }
+    
+    .subject-tabs button:hover {
+      background-color: var(--light);
+    }
+    
+    .subject-tabs button.active-subject {
+      background-color: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+    }
+    
+    #question-panel {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.5rem;
+    }
+    
+    .question-text {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+      font-weight: 500;
+    }
+    
+    .options-container {
+      margin: 1rem 0;
+    }
+    
+    .option {
+      display: block;
+      margin: 0.8rem 0;
+      padding: 0.8rem;
+      background-color: var(--light);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 4px solid transparent;
+    }
+    
+    .option:hover {
+      background-color: #e0e0e0;
+      border-left-color: var(--secondary);
+    }
+    
+    .option input {
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    
+    .navigator {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+    
+    .nav-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0.3rem;
+      background-color: rgb(159, 248, 179);
+      border: 1px solid #ddd;
+      font-weight: 500;
+    }
+    
+    .nav-btn.answered {
+      background-color: var(--success);
+      color: white;
+      border-color: var(--success);
+    }
+    
+    .nav-btn.current {
+      background-color: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+      transform: scale(1.1);
+    }
+    
+    .question-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+    }
+    
+    .question {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 8px;
+      background: rgb(158, 81, 81);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .correct {
+      border-left: 5px solid var(--success);
+      background-color: rgba(46, 204, 113, 0.1);
+    }
+    
+    .incorrect {
+      border-left: 5px solid var(--danger);
+      background-color: rgba(231, 76, 60, 0.1);
+    }
+    
+    .unattempted {
+      border-left: 5px solid var(--warning);
+      background-color: rgba(243, 156, 18, 0.1);
+    }
+    
+    .result-summary {
+      background: rgb(205 246 219);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .score-display {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin: 1rem 0;
+    }
+    
+    .progress-container {
+      width: 100%;
+      background-color: #6c3d3d;
+      border-radius: 10px;
+      margin: 1.5rem 0;
+      height: 20px;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--success), var(--secondary));
+      transition: width 0.5s ease;
+    }
+    
+    /* Admin panel styles */
+    .admin {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    }
+    
+    .admin-header {
+      background: linear-gradient(135deg, #8e44ad, #6c3483);
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .admin-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    
+    .admin-controls button {
+      background-color: var(--admin);
+    }
+    
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5rem;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .results-table th {
+      background: var(--admin);
+      color: white;
+      padding: 12px 15px;
+      text-align: left;
+    }
+    
+    .results-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .results-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .results-table tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .admin-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--admin);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .admin-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .admin-detail {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .admin-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .admin-detail-header h3 {
+      margin-bottom: 0;
+      color: var(--admin);
+    }
+    
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+      }
+      
+      #timer {
+        margin-top: 0.5rem;
+      }
+      
+      .container {
+        padding: 0 0.5rem;
+      }
+      
+      .login, .test, .result, .admin {
+        padding: 1rem;
+      }
+      
+      .subject-tabs {
+        flex-direction: column;
+      }
+      
+      .subject-tabs button {
+        width: 100%;
+        margin: 0.2rem 0;
+      }
+      
+      .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+      }
+      
+      .results-table {
+        font-size: 0.9rem;
+      }
+      
+      .results-table th, 
+      .results-table td {
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <h2>TESTIFY</h2>
+  <div id="timer">
+    <span id="time-display">03:00:00</span>
+  </div>
+</div>
+
+<div class="container">
+  <!-- LOGIN SECTION -->
+  <div class="login active" id="login">
+    <h2>Welcome to TESTIFY Platform</h2>
+    <p>Please enter your details to begin the test</p>
+    <div style="margin-top: 2rem;">
+      <input type="text" id="name" placeholder="Enter Your Full Name" required>
+      <input type="text" id="roll" placeholder="Enter Your Roll Number" required>
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <button onclick="startTest()" style="padding: 12px 30px; font-size: 1.1rem;">Start Test</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEST SECTION -->
+  <div class="test" id="test">
+    <div class="subject-tabs">
+      <button onclick="switchSubject('physics')" id="physics-tab">Physics</button>
+      <button onclick="switchSubject('chemistry')" id="chemistry-tab">Chemistry</button>
+      <button onclick="switchSubject('math')" id="math-tab">Mathematics</button>
+    </div>
+    
+    <div id="question-panel">
+      <div class="question-text" id="question-text"></div>
+      <div class="options-container" id="options-container"></div>
+      <div class="question-nav">
+        <button onclick="prevQ()">Previous</button>
+        <button onclick="nextQ()">Next</button>
+      </div>
+    </div>
+    
+    <div class="navigator">
+      <div id="navigation-buttons"></div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 2rem;">
+      <button onclick="submitTest()" style="background-color: var(--accent); padding: 12px 30px;">Submit Test</button>
+    </div>
+  </div>
+
+  <!-- RESULT SECTION -->
+  <div class="result" id="result">
+    <div class="result-summary">
+      <h3>Test Result</h3>
+      <p>Student: <strong><span id="student-name"></span></strong></p>
+      <p>Roll No: <strong><span id="roll-no"></span></strong></p>
+      
+      <div class="score-display">
+        <span id="score">0</span> / <span id="total">0</span>
+      </div>
+      
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      
+      <p id="percentage"></p>
+    </div>
+    
+    <div id="result-panel"></div>
+    
+    <div style="text-align: center; margin-top: 2rem;">
+      <button onclick="downloadPDF()" style="background-color: var(--primary); padding: 12px 30px;">Download Result as PDF</button>
+    </div>
+  </div>
+  
+  <!-- ADMIN SECTION -->
+  <div class="admin" id="admin">
+    <div class="admin-header">
+      <h2>Test Results - Admin Dashboard</h2>
+    </div>
+    
+    <div class="admin-controls">
+      <button onclick="clearAllResults()">Clear All Results</button>
+      <button onclick="hideAdmin()">Back to Login</button>
+    </div>
+    
+    <div id="admin-results-container">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Roll No</th>
+            <th>Physics</th>
+            <th>Chemistry</th>
+            <th>Math</th>
+            <th>Total</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="admin-results-list">
+          <!-- Results will be populated here -->
+        </tbody>
+      </table>
+    </div>
+    
+    <div id="admin-detail-view" style="display: none;">
+      <div class="admin-detail">
+        <div class="admin-detail-header">
+          <h3>Detailed Result</h3>
+          <button onclick="closeAdminDetail()">Close</button>
+        </div>
+        <div id="admin-detail-content"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="admin-btn" onclick="showAdminPanel()">🔒</button>
+
+<script>
+const questions = {
+  physics: [
+    { question: "A particle moves along a straight line OX. At a time t (in seconds) the distance x (in metres) of the particle from O is given by x = 40 + 12t - t³. How long would the particle travel before coming to rest?", options: ["16 m", "24 m", "40 m", "56 m"], correct: 3 },
+    { question: "The ratio of the radii of gyration of a circular disc about a tangential axis in the plane of the disc and of a circular ring of the same radius about a tangential axis in the plane of the ring is", options: ["1:√2", "1:3", "2:1", "√5:√6"], correct: 3 },
+    { question: "A thin circular ring of mass M and radius R is rotating about its axis with a constant angular velocity ω. Two objects each of mass m are attached gently to the opposite ends of a diameter of the ring. The ring now rotates with an angular velocity of", options: ["ωM/(M+2m)", "ω(M+2m)/M", "ω(M-2m)/(M+2m)", "ωM/(M+m)"], correct: 0 },
+    { question: "A satellite is revolving in a circular orbit at a height h from the earth's surface (radius of earth R; h << R). The minimum increase in its orbital velocity required, so that the satellite could escape from the earth's gravitational field, is close to (Neglect the effect of atmosphere)", options: ["√(gR/2)", "√(gR)", "√(2gR)", "√(gR)(√2-1)"], correct: 3 },
+    { question: "The energy required to take a satellite to a height h above Earth's surface (radius of Earth = 6.4 × 10³ km) is E₁ and kinetic energy required for the satellite to be in a circular orbit at this height is E₂. The value of h for which E₁ and E₂ are equal is", options: ["1.28 × 10⁴ km", "6.4 × 10³ km", "3.2 × 10³ km", "2.56 × 10⁴ km"], correct: 2 },
+    { question: "A parallel plate capacitor is made of two circular plates separated by a distance of 5 mm and with a dielectric of dielectric constant 2.2 between them. When the electric field in the dielectric is 3 × 10⁴ V/m, the charge density of the positive plate will be close to", options: ["6 × 10⁻⁷ C/m²", "3 × 10⁻⁷ C/m²", "3 × 10⁴ C/m²", "6 × 10⁴ C/m²"], correct: 0 },
+    { question: "In a Young's double slit experiment, the slits are placed 0.320 mm apart. Light of wavelength λ = 500 nm is incident on the slits. The total number of bright fringes that are observed in the angular range -30° ≤ θ ≤ 30° is", options: ["320", "321", "640", "641"], correct: 3 },
+    { question: "A plano-convex lens of refractive index 1.5 and radius of curvature 30 cm is silvered at the curved surface. Now this lens has been used to form the image of an object. At what distance from this lens an object be placed in order to have a real image of the size of the object?", options: ["20 cm", "30 cm", "60 cm", "80 cm"], correct: 0 },
+    { question: "A radioactive nucleus A with a half-life T, decays into a nucleus B. At t = 0, there is no nucleus B. After some time, the ratio of the number of nuclei of B to that of A is 0.3. This t is given by", options: ["t = T log(1.3)", "t = T/2 log(1.3)", "t = T log(1.3)/log2", "t = T log2/log(1.3)"], correct: 2 },
+    { question: "The current voltage relation of a diode is given by I = (e^(1000V/T) - 1) mA, where the applied voltage V is in volts and the temperature T is in degree kelvin. If a student makes an error measuring ±0.01 V while measuring the current of 5 mA at 300 K, what will be the error in the value of current in mA?", options: ["0.2 mA", "0.02 mA", "0.5 mA", "0.05 mA"], correct: 0 },
+    { question: "A particle of mass m is moving along the side of a square of side 'a', with a uniform speed v in the x-y plane as shown in the figure. Which of the following statements is false for the angular momentum L about the origin?", options: ["L = -mvR/√2 k when the particle is moving from D to A", "L = mvR/√2 k when the particle is moving from A to B", "L = mv[R/√2 - a] k when the particle is moving from B to C", "L = mva/√2 k when the particle is moving from C to D"], correct: 1 },
+    { question: "An inductor (L = 0.03 H) and a resistor (R = 0.15 kΩ) are connected in series to a battery of 15V emf in a circuit shown below. The key K₁ has been kept closed for a long time. Then at t = 0, K₁ is opened and key K₂ is closed simultaneously. At t = 1 ms, the current in the circuit will be (e^5 ≈ 150)", options: ["6.7 mA", "0.67 mA", "100 mA", "67 mA"], correct: 1 },
+    { question: "A pipe open at both ends has a fundamental frequency f in air. The pipe is dipped vertically in water so that half of it is in water. The fundamental frequency of the air column is now", options: ["f/2", "3f/4", "2f", "f"], correct: 3 },
+    { question: "A galvanometer having a coil resistance of 100 Ω gives a full scale deflection when a current of 1 mA is passed through it. The value of the resistance which can convert this galvanometer into ammeter giving a full scale deflection for a current of 10 A is", options: ["0.01 Ω", "2 Ω", "0.1 Ω", "3 Ω"], correct: 0 },
+    { question: "A train is moving on a straight track with speed 20 m/s. It is blowing its whistle at the frequency of 1000 Hz. The percentage change in the frequency heard by a person standing near the track as the train passes him is (speed of sound = 320 m/s) close to", options: ["6%", "12%", "18%", "24%"], correct: 1 },
+    { question: "A uniform magnetic field B exists in the region between x = 0 and x = 3R/2 (region 2 in the figure) pointing normally into the plane of the paper. A particle with charge +Q and momentum p directed along x-axis enters region 2 from region 1 at point P₁ (y = -R). Which of the following option(s) is/are correct?", options: ["For B > 2p/3QR, the particle will re-enter region 1", "For B = 8p/13QR, the particle will enter region 3 through the point P2 on x-axis", "When the particle re-enters region 1 through the longest possible path in region 2, the magnitude of the change in its linear momentum between point P1 and the farthest point from y-axis is p/√2", "For a fixed B, particles of same charge Q and same velocity v, the distance between the point P1 and the point of re-entry into region 1 is inversely proportional to the mass of the particle"], correct: 0 },
+    { question: "A block of mass 0.1 kg is connected to an elastic spring (spring constant 640 N/m) and oscillates in vertical plane. The block is pulled 5 cm downward from its equilibrium position and released from rest. The maximum speed of the block is (g = 10 m/s²)", options: ["2 m/s", "1 m/s", "1.5 m/s", "0.5 m/s"], correct: 1 },
+    { question: "Two identical glass rods S₁ and S₂ (refractive index = 1.5) have one convex end of radius of curvature 10 cm. They are placed with the curved surfaces at a distance d as shown in the figure, with their axes (shown by the dashed line) aligned. When a point source of light P is placed inside rod S₁ on its axis at a distance of 50 cm from the curved face, the light rays emanating from it are found to be parallel to the axis inside S₂. The distance d is", options: ["60 cm", "70 cm", "80 cm", "90 cm"], correct: 1 },
+    { question: "A uniformly charged solid sphere of radius R has potential V₀ (measured with respect to ∞) on its surface. For this sphere the equipotential surfaces with potentials 3V₀/2, 5V₀/4, 3V₀/4 and V₀/4 have radius R₁, R₂, R₃ and R₄ respectively. Then", options: ["R₁ = 0 and R₂ > (R₄ - R₃)", "R₁ ≠ 0 and (R₂ - R₁) > (R₄ - R₃)", "R₁ = 0 and R₂ < (R₄ - R₃)", "2R < R₄"], correct: 2 },
+    { question: "A particle of mass m moves in the potential energy U(x) = -A/(1 + x²), where A is a positive constant. The angular frequency of small oscillations about the position of stable equilibrium is", options: ["√(2A/m)", "√(A/m)", "√(A/2m)", "√(4A/m)"], correct: 0 },
+    { question: "A solid sphere of radius R and density ρ is attached to one end of a massless spring of force constant k. The other end of the spring is connected to another solid sphere of radius R and density 3ρ. The complete arrangement is placed in a liquid of density 2ρ and is allowed to reach equilibrium. The correct statement(s) is (are)", options: ["the net elongation of the spring is 4πR³ρg/3k", "the net elongation of the spring is 8πR³ρg/3k", "the light sphere is partially submerged", "the light sphere is completely submerged"], correct: 3 },
+    { question: "A parallel beam of light is incident from air at an angle α on the side PQ of a right-angled triangular prism of refractive index n = √2. Light undergoes total internal reflection in the prism at the face PR when α has a minimum value of 45°. The angle θ of the prism is", options: ["15°", "22.5°", "30°", "45°"], correct: 0 },
+    { question: "A metal surface is illuminated by light of two different wavelengths 248 nm and 310 nm. The maximum speeds of the photoelectrons corresponding to these wavelengths are v₁ and v₂, respectively. If the ratio v₁ : v₂ = 2 : 1 and hc = 1240 eV nm, the work function of the metal is nearly", options: ["3.7 eV", "3.2 eV", "2.8 eV", "2.5 eV"], correct: 0 },
+    { question: "A small block slides down on a smooth inclined plane, starting from rest at time t = 0. Let Sn be the distance traveled by the block in the interval t = n-1 to t = n. Then the ratio Sn/Sn+1 is", options: ["(2n-1)/2n", "(2n+1)/(2n-1)", "(2n-1)/(2n+1)", "2n/(2n+1)"], correct: 2 },
+    { question: "A point particle of mass m, moves along the uniformly rough track PQR as shown in the figure. The coefficient of friction, between the particle and the rough track equals μ. The particle is released, from rest, from the point P and it comes to rest at a point R. The energies, lost by the ball, over the parts, PQ and QR, of the track, are equal to each other, and no energy is lost when particle changes direction from PQ to QR. The distance from P to R is", options: ["2h/μ", "h/μ", "h/(2μ)", "3h/(2μ)"], correct: 0 }
+  ],
+  chemistry: [
+    { question: "The standard Gibbs energy change at 300 K for the reaction 2A ⇌ B + C is 2494.2 J. At a given time, the composition of the reaction mixture is [A] = 1/2, [B] = 2 and [C] = 1/2. The reaction proceeds in the [R = 8.314 J/K/mol, e = 2.718]", options: ["forward direction because Q < Kc", "reverse direction because Q < Kc", "forward direction because Q > Kc", "reverse direction because Q > Kc"], correct: 3 },
+    { question: "The heats of combustion of carbon and carbon monoxide are -393.5 and -283.5 kJ mol⁻¹, respectively. The heat of formation (in kJ) of carbon monoxide per mole is", options: ["110.5", "676.5", "-676.5", "-110.5"], correct: 3 },
+    { question: "Which of the following compounds will exhibit geometrical isomerism?", options: ["1-Phenyl-2-butene", "3-Phenyl-1-butene", "2-Phenyl-1-butene", "1,1-Diphenyl-1-propene"], correct: 0 },
+    { question: "The synthesis of alkyl fluorides is best accomplished by", options: ["Free radical fluorination", "Sandmeyer's reaction", "Finkelstein reaction", "Swarts reaction"], correct: 3 },
+    { question: "In the reaction sequence, X is: CH₃COOH → (PCl₅) A → (NH₃, heat) B → (Br₂, KOH) C → (NaNO₂/HCl, 0-5°C) X", options: ["CH₃CH₂NH₂", "CH₃CH₂OH", "CH₃CH₂CH₂NH₂", "CH₃CH₂COOH"], correct: 1 },
+    { question: "Which of the following is the energy of a possible excited state of hydrogen?", options: ["+13.6 eV", "-6.8 eV", "-3.4 eV", "+6.8 eV"], correct: 2 },
+    { question: "The intermolecular interaction that is dependent on the inverse cube of distance between the molecules is", options: ["ion-ion interaction", "ion-dipole interaction", "London force", "hydrogen bond"], correct: 3 },
+    { question: "The following reaction is performed at 298 K. 2NO(g) + O₂(g) ⇌ 2NO₂(g). The standard free energy of formation of NO(g) is 86.6 kJ/mol at 298 K. What is the standard free energy of formation of NO₂(g) at 298 K? (Kp = 1.6 × 10¹²)", options: ["86600 + R(298) ln(1.6×10¹²)", "0.5[2×86,600 - R(298) ln(1.6×10¹²)]", "R(298) ln(1.6×10¹²) - 86600", "0.5[2×86,600 + R(298) ln(1.6×10¹²)]"], correct: 1 },
+    { question: "The ionic radii (in Å) of N³⁻, O²⁻ and F⁻ are respectively", options: ["1.36, 1.40, 1.71", "1.36, 1.71, 1.40", "1.71, 1.40, 1.36", "1.71, 1.36, 1.40"], correct: 2 },
+    { question: "In Carius method of estimation of halogen, 0.15 g of an organic compound gave 0.12 g of AgBr. The percentage of bromine in the compound is (atomic mass Ag = 108, Br = 80)", options: ["34.04%", "42.6%", "53.4%", "68.08%"], correct: 0 },
+    { question: "Which of the following compounds is not colored yellow?", options: ["Zn₂[Fe(CN)₆]", "K₃[Co(NO₂)₆]", "(NH₄)₃[As(Mo₃O₁₀)₄]", "BaCrO₄"], correct: 0 },
+    { question: "The correct statement regarding the comparison of staggered and eclipsed conformations of ethane is", options: ["The eclipsed conformation of ethane is more stable than staggered conformation because eclipsed conformation has no torsional strain", "The eclipsed conformation of ethane is more stable than staggered conformation even though the eclipsed conformation has torsional strain", "The staggered conformation of ethane is more stable than eclipsed conformation because staggered conformation has no torsional strain", "The staggered conformation of ethane is less stable than eclipsed conformation because staggered conformation has torsional strain"], correct: 2 },
+    { question: "From the following statements regarding H₂O₂, choose the incorrect statement", options: ["It can act only as an oxidizing agent", "It decomposes on exposure to light", "It has to be stored in plastic or wax lined glass bottles in dark", "It has to be kept away from dust"], correct: 0 },
+    { question: "Which one of the following alkaline earth metal sulphates has its hydration enthalpy greater than its lattice enthalpy?", options: ["CaSO₄", "BeSO₄", "BaSO₄", "SrSO₄"], correct: 1 },
+    { question: "The standard enthalpy of formation of NH₃ is -46.0 kJ mol⁻¹. If the enthalpy of formation of H₂ from its atoms is -436 kJ mol⁻¹ and that of N₂ is -712 kJ mol⁻¹, the average bond enthalpy of N-H bond in NH₃ is", options: ["-964 kJ mol⁻¹", "+352 kJ mol⁻¹", "+1056 kJ mol⁻¹", "-1102 kJ mol⁻¹"], correct: 1 },
+    { question: "The pair in which phosphorous atoms have a formal oxidation state of +3 is", options: ["Orthophosphorous and hypophosphoric acids", "Pyrophosphorous and pyrophosphoric acids", "Orthophosphorous and pyrophosphorous acids", "Pyrophosphorous and hypophosphoric acids"], correct: 2 },
+    { question: "Which of the following statements about the interstitial compounds is incorrect?", options: ["They are chemically reactive", "They are very hard", "They have metallic conductivity", "They have high melting points"], correct: 0 },
+    { question: "Sodium metal crystallizes in a body centred cubic lattice with a unit cell edge of 4.29 Å. The radius of sodium atom is approximately", options: ["1.86 Å", "3.22 Å", "5.72 Å", "0.93 Å"], correct: 0 },
+    { question: "Which of the following compounds is not an antacid?", options: ["Aluminium hydroxide", "Cimetidine", "Phenelzine", "Ranitidine"], correct: 2 },
+    { question: "Which of the vitamins given below is water soluble?", options: ["Vitamin C", "Vitamin D", "Vitamin E", "Vitamin K"], correct: 0 },
+    { question: "The incorrect expression among the following is", options: ["ΔG_system/ΔS_total = -T", "In isothermal process, W_reversible = -nRT ln(V_f/V_i)", "lnK = ΔH° - TΔS°/RT", "K = e^(-ΔG°/RT)"], correct: 2 },
+    { question: "Resistance of 0.2 M solution of an electrolyte is 50 Ω. The specific conductance of the solution is 1.4 S m⁻¹. The resistance of 0.5 M solution of the same electrolyte is 280 Ω. The molar conductivity of 0.5 M solution of the electrolyte in S m² mol⁻¹ is", options: ["5 × 10⁻⁴", "5 × 10⁻³", "5 × 10³", "5 × 10²"], correct: 0 },
+    { question: "The freezing point (in °C) of a solution containing 0.1 g of K₃[Fe(CN)₆] (mol. wt. 329) in 100 g of water (Kf = 1.86 K kg mol⁻¹) is", options: ["-2.3 × 10⁻²", "-5.7 × 10⁻²", "-5.7 × 10⁻³", "-1.2 × 10⁻²"], correct: 0 },
+    { question: "For the reaction SO₂(g) + 1/2O₂(g) ⇌ SO₃(g), if Kp = Kc(RT)^x where the symbols have usual meaning then the value of x is (assuming ideality)", options: ["-1/2", "1/2", "1", "-1"], correct: 0 },
+    { question: "Which among the following will be named as dibromidobis(ethylenediamine)chromium(III) bromide?", options: ["[Cr(en)₃]Br₃", "[Cr(en)₂Br₂]Br", "[Cr(en)Br₄]⁻", "[Cr(en)Br₂]Br"], correct: 1 }
+  ],
+  math: [
+    { question: "The number of points, having both co-ordinates as integers, that lie in the interior of the triangle with vertices (0, 0), (0, 41) and (41, 0) is", options: ["820", "780", "901", "861"], correct: 1 },
+    { question: "Let y(x) be the solution of the differential equation (x logx) dy/dx + y = 2x logx, (x ≥ 1). Then y(e) is equal to", options: ["e", "0", "2", "2e"], correct: 2 },
+    { question: "The number of integers greater than 6000 that can be formed, using the digits 3, 5, 6, 7 and 8, without repetition, is", options: ["216", "192", "120", "72"], correct: 1 },
+    { question: "Let α and β be the roots of equation x² - 6x - 2 = 0. If aₙ = αⁿ - βⁿ, for n ≥ 1, then the value of (a₁₀ - 2a₈)/2a₉ is", options: ["3", "-3", "6", "-6"], correct: 0 },
+    { question: "Let f(x) = x³ + 3x² - 9x + 2. If m and M are the minimum and maximum values of f, respectively, in the interval [1, 2], then M - m is equal to", options: ["48", "25", "18", "0"], correct: 1 },
+    { question: "The integral ∫(2x¹² + 5x⁹)/(x⁵ + x³ + 1)³ dx is equal to", options: ["-x⁵/(x⁵ + x³ + 1)² + C", "x¹⁰/(2(x⁵ + x³ + 1)²) + C", "x⁵/(2(x⁵ + x³ + 1)²) + C", "-x¹⁰/(2(x⁵ + x³ + 1)²) + C"], correct: 3 },
+    { question: "A complex number z is said to be unimodular if |z| = 1. Suppose z₁ and z₂ are complex numbers such that (z₁ - 2z₂)/(2 - z₁z̄₂) is unimodular and z₂ is not unimodular. Then the point z₁ lies on a", options: ["straight line parallel to x-axis", "straight line parallel to y-axis", "circle of radius 2", "circle of radius √2"], correct: 2 },
+    { question: "Let O be the vertex and Q be any point on the parabola, x² = 8y. If the point P divides the line segment OQ internally in the ratio 1:3, then the locus of P is", options: ["x² = y", "y² = x", "y² = 2x", "x² = 2y"], correct: 3 },
+    { question: "The area (in sq. units) of the region described by {(x, y) : y² ≤ 2x and y ≥ 4x - 1} is", options: ["7/32", "5/64", "15/64", "9/32"], correct: 3 },
+    { question: "The number of common tangents to the circles x² + y² - 4x - 6y - 12 = 0 and x² + y² + 6x + 18y + 26 = 0 is", options: ["1", "2", "3", "4"], correct: 2 },
+    { question: "The set of all values of λ for which the system of linear equations 2x₁ - 2x₂ + x₃ = λx₁, 2x₁ - 3x₂ + 2x₃ = λx₂, -x₁ + 2x₂ = λx₃ has a non-trivial solution", options: ["contains two elements", "contains more than two elements", "is an empty set", "is a singleton"], correct: 0 },
+    { question: "If A = [1 2 2; 2 1 -2; a 2 b] is a matrix such that AAᵀ = 9I₃, then the ordered pair (a, b) is equal to", options: ["(2, -1)", "(-2, 1)", "(2, 1)", "(-2, -1)"], correct: 3 },
+    { question: "The normal to the curve, x² + 2xy - 3y² = 0 at (1, 1)", options: ["does not meet the curve again", "meets the curve again in the second quadrant", "meets the curve again in the third quadrant", "meets the curve again in the fourth quadrant"], correct: 3 },
+    { question: "Let f: R → R be a function defined by f(x) = max{x, x³}. The set of all points where f is NOT differentiable is", options: ["{-1, 1}", "{-1, 0}", "{0, 1}", "{-1, 0, 1}"], correct: 3 },
+    { question: "If the tangent at a point P, with parameter t, on the curve x = 4t² + 3, y = 8t³ - 1, t ∈ R, meets the curve again at a point Q, then the coordinates of Q are", options: ["(t² + 3, -t³ - 1)", "(4t² + 3, -8t³ - 1)", "(t² + 3, t³ - 1)", "(16t² + 3, -64t³ - 1)"], correct: 1 },
+    { question: "The distance of the point (1, 0, 2) from the point of intersection of the line (x-2)/3 = (y+1)/4 = (z-2)/12 and the plane x - y + z = 16 is", options: ["2√14", "8", "3√21", "13"], correct: 3 },
+    { question: "The equation of the plane containing the line 2x - 5y + z = 3; x + y + 4z = 5, and parallel to the plane x + 3y + 6z = 1 is", options: ["x + 3y + 6z = 7", "2x + 6y + 12z = -13", "2x + 6y + 12z = 13", "x + 3y + 6z = -7"], correct: 0 },
+    { question: "The area (in sq. units) of the quadrilateral formed by the tangents at the end points of the latera recta to the ellipse x²/9 + y²/5 = 1 is", options: ["27", "27/4", "18", "27/2"], correct: 0 },
+    { question: "Let a, b, c ∈ R. If f(x) = ax² + bx + c is such that a + b + c = 3 and f(x + y) = f(x) + f(y) + xy, ∀x, y ∈ R, then ∑(n=1 to 10) f(n) is equal to", options: ["255", "330", "165", "190"], correct: 1 },
+    { question: "The mean of the data set comprising of 16 observations is 16. If one of the observation valued 16 is deleted and three new observations valued 3, 4 and 5 are added to the data, then the mean of the resultant data is", options: ["16.0", "15.8", "14.0", "16.8"], correct: 2 },
+    { question: "If 2 + 3i is one of the roots of the equation 2x³ - 9x² + kx - 13 = 0, k ∈ R, then the real root of this equation", options: ["does not exist", "is 1/2", "is 1", "is 3/2"], correct: 1 },
+    { question: "The sum of coefficients of integral powers of x in the binomial expansion of (1 - 2√x)⁵⁰ is", options: ["1/2(3⁵⁰ + 1)", "1/2(3⁵⁰)", "1/2(3⁵⁰ - 1)", "1/2(2⁵⁰ + 1)"], correct: 0 },
+    { question: "The sum of first 9 terms of the series 1³/1 + (1³ + 2³)/(1 + 3) + (1³ + 2³ + 3³)/(1 + 3 + 5) + ... is", options: ["71", "96", "142", "192"], correct: 1 },
+    { question: "If the function g(x) = { k√(x + 1), 0 ≤ x ≤ 3; mx + 2, 3 < x ≤ 5 } is differentiable, then the value of k + m is", options: ["2", "16/5", "10/3", "4"], correct: 0 },
+    { question: "Let f: R → R be a function such that f(2 - x) = f(2 + x) and f(4 - x) = f(4 + x), for all x ∈ R and ∫(from 0 to 2) f(x) dx = 5. Then the value of ∫(from 10 to 50) f(x) dx is", options: ["125", "80", "100", "200"], correct: 2 }
+  ]
+};
+
+let currentSubject = 'physics', currentIndex = 0;
+let answers = { physics: [], chemistry: [], math: [] };
+let timerTime = 3 * 60 * 60;
+let testResults = JSON.parse(localStorage.getItem('testResults')) || [];
+
+function startTest() {
+  const name = document.getElementById("name").value;
+  const roll = document.getElementById("roll").value;
+  if (!name || !roll) return alert("Enter name and roll no.");
+
+  localStorage.setItem("studentName", name);
+  localStorage.setItem("rollNo", roll);
+
+  document.getElementById("login").classList.remove("active");
+  document.getElementById("test").classList.add("active");
+
+  switchSubject('physics');
+
+  setInterval(() => {
+    if (--timerTime <= 0) return submitTest();
+    const h = String(Math.floor(timerTime / 3600)).padStart(2, '0');
+    const m = String(Math.floor((timerTime % 3600) / 60)).padStart(2, '0');
+    const s = String(timerTime % 60).padStart(2, '0');
+    document.getElementById("timer").textContent = `${h}:${m}:${s}`;
+  }, 1000);
+}
+
+function switchSubject(subj) {
+  currentSubject = subj;
+  currentIndex = 0;
+  renderQuestion();
+  renderNavigation();
+}
+
+function renderQuestion() {
+  const q = questions[currentSubject][currentIndex];
+  const ans = answers[currentSubject][currentIndex];
+  const panel = document.getElementById("question-panel");
+  let html = `<h3>Q${currentIndex + 1}: ${q.question}</h3>`;
+  q.options.forEach((opt, i) => {
+    const checked = ans === i ? 'checked' : '';
+    html += `<div><input type="radio" name="option" value="${i}" ${checked} onchange="selectAnswer(${i})"> ${opt}</div>`;
+  });
+  html += `<br><button onclick="prevQ()">Previous</button> <button onclick="nextQ()">Next</button>`;
+  panel.innerHTML = html;
+}
+
+function renderNavigation() {
+  const nav = document.getElementById("navigation-buttons");
+  nav.innerHTML = "";
+  questions[currentSubject].forEach((_, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = `Q${i + 1}`;
+    btn.style.backgroundColor = answers[currentSubject][i] !== undefined ? "lightgreen" : "white";
+    btn.onclick = () => { currentIndex = i; renderQuestion(); };
+    nav.appendChild(btn);
+  });
+}
+
+function selectAnswer(i) {
+  answers[currentSubject][currentIndex] = i;
+  renderNavigation();
+}
+
+function prevQ() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderQuestion();
+  }
+}
+function nextQ() {
+  if (currentIndex < questions[currentSubject].length - 1) {
+    currentIndex++;
+    renderQuestion();
+  }
+}
+
+function submitTest() {
+  localStorage.setItem("studentAnswers", JSON.stringify(answers));
+  document.getElementById("test").classList.remove("active");
+  document.getElementById("result").classList.add("active");
+
+  const name = localStorage.getItem("studentName");
+  const roll = localStorage.getItem("rollNo");
+  document.getElementById("student-name").textContent = name;
+  document.getElementById("roll-no").textContent = roll;
+
+  const resPanel = document.getElementById("result-panel");
+  let total = 0, score = 0;
+  resPanel.innerHTML = "";
+
+  for (let subject in questions) {
+    resPanel.innerHTML += `<h3>${subject.toUpperCase()}</h3>`;
+    questions[subject].forEach((q, i) => {
+      total++;
+      const ans = answers[subject][i];
+      const correct = q.correct;
+      let cls = ans === undefined ? 'unattempted' : (ans === correct ? 'correct' : 'incorrect');
+      if (cls === 'correct') score++;
+
+      resPanel.innerHTML += `
+        <div class="question ${cls}">
+          <p><strong>Q${i + 1}:</strong> ${q.question}</p>
+          ${q.options.map((opt, idx) => {
+            const isSelected = idx === ans ? ' (Your answer)' : '';
+            const isCorrect = idx === correct ? ' ✅' : '';
+            return `<div>${opt}${isSelected}${isCorrect}</div>`;
+          }).join('')}
+        </div>
+      `;
+    });
+  }
+
+  document.getElementById("score").textContent = score;
+  document.getElementById("total").textContent = total;
+  
+  // Save test results for admin
+  const physicsScore = calculateSubjectScore('physics');
+  const chemistryScore = calculateSubjectScore('chemistry');
+  const mathScore = calculateSubjectScore('math');
+  
+  testResults.push({
+    name,
+    roll,
+    timestamp: new Date().toISOString(),
+    physics: physicsScore,
+    chemistry: chemistryScore,
+    math: mathScore,
+    total: score
+  });
+  
+  localStorage.setItem('testResults', JSON.stringify(testResults));
+}
+
+function calculateSubjectScore(subject) {
+  let score = 0;
+  questions[subject].forEach((q, i) => {
+    const ans = answers[subject][i];
+    if (ans !== undefined && ans === q.correct) {
+      score++;
+    }
+  });
+  return score;
+}
+
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const name = localStorage.getItem("studentName");
+  const roll = localStorage.getItem("rollNo");
+  const score = document.getElementById("score").textContent;
+  const total = document.getElementById("total").textContent;
+
+  doc.text(`Student: ${name}`, 10, 10);
+  doc.text(`Roll No: ${roll}`, 10, 20);
+  doc.text(`Score: ${score} / ${total}`, 10, 30);
+
+  let y = 40;
+  for (let subject in questions) {
+    doc.text(`${subject.toUpperCase()}`, 10, y); y += 8;
+    questions[subject].forEach((q, i) => {
+      const ans = answers[subject][i];
+      const correctAns = q.options[q.correct];
+      const selectedAns = ans !== undefined ? q.options[ans] : "Not Attempted";
+      const result = ans === q.correct ? "✔️" : (ans === undefined ? "—" : "❌");
+
+      doc.text(`Q${i + 1}: ${q.question}`, 10, y); y += 6;
+      doc.text(`Your Answer: ${selectedAns} ${result}`, 15, y); y += 6;
+      doc.text(`Correct: ${correctAns}`, 15, y); y += 8;
+
+      if (y > 270) { doc.addPage(); y = 20; }
+    });
+  }
+
+  doc.save(`${name}_Result.pdf`);
+}
+
+// Admin functions
+function showAdminPanel() {
+  const password = prompt("Enter admin password:");
+  if (password === "admin123") {
+    document.getElementById("admin").classList.add("active");
+    document.getElementById("login").classList.remove("active");
+    document.getElementById("test").classList.remove("active");
+    document.getElementById("result").classList.remove("active");
+    renderAdminResults();
+  } else {
+    alert("Invalid password");
+  }
+}
+
+function hideAdmin() {
+  document.getElementById("admin").classList.remove("active");
+  document.getElementById("login").classList.add("active");
+}
+
+function renderAdminResults() {
+  const resultsList = document.getElementById("admin-results-list");
+  resultsList.innerHTML = "";
+  
+  testResults = JSON.parse(localStorage.getItem('testResults')) || [];
+  
+  if (testResults.length === 0) {
+    resultsList.innerHTML = "<tr><td colspan='7'>No results available</td></tr>";
+    return;
+  }
+  
+  testResults.forEach((result, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${result.name}</td>
+      <td>${result.roll}</td>
+      <td>${result.physics} / ${questions.physics.length}</td>
+      <td>${result.chemistry} / ${questions.chemistry.length}</td>
+      <td>${result.math} / ${questions.math.length}</td>
+      <td>${result.total} / ${Object.keys(questions).reduce((sum, subj) => sum + questions[subj].length, 0)}</td>
+      <td>
+        <button onclick="viewAdminDetail(${index})">View</button>
+        <button onclick="downloadAdminPDF(${index})">PDF</button>
+      </td>
+    `;
+    resultsList.appendChild(row);
+  });
+}
+
+function viewAdminDetail(index) {
+  const result = testResults[index];
+  const detailContent = document.getElementById("admin-detail-content");
+  
+  detailContent.innerHTML = `
+    <p><strong>Name:</strong> ${result.name}</p>
+    <p><strong>Roll No:</strong> ${result.roll}</p>
+    <p><strong>Date:</strong> ${new Date(result.timestamp).toLocaleString()}</p>
+    <h4>Subject Scores:</h4>
+    <ul>
+      <li>Physics: ${result.physics} / ${questions.physics.length}</li>
+      <li>Chemistry: ${result.chemistry} / ${questions.chemistry.length}</li>
+      <li>Mathematics: ${result.math} / ${questions.math.length}</li>
+    </ul>
+    <p><strong>Total Score:</strong> ${result.total} / ${Object.keys(questions).reduce((sum, subj) => sum + questions[subj].length, 0)}</p>
+  `;
+  
+  document.getElementById("admin-detail-view").style.display = "block";
+}
+
+function closeAdminDetail() {
+  document.getElementById("admin-detail-view").style.display = "none";
+}
+
+function downloadAdminPDF(index) {
+  const result = testResults[index];
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.text(`Student: ${result.name}`, 10, 10);
+  doc.text(`Roll No: ${result.roll}`, 10, 20);
+  doc.text(`Test Date: ${new Date(result.timestamp).toLocaleString()}`, 10, 30);
+  doc.text(`Total Score: ${result.total} / ${Object.keys(questions).reduce((sum, subj) => sum + questions[subj].length, 0)}`, 10, 40);
+
+  let y = 50;
+  doc.text("Subject Scores:", 10, y); y += 10;
+  doc.text(`Physics: ${result.physics} / ${questions.physics.length}`, 15, y); y += 8;
+  doc.text(`Chemistry: ${result.chemistry} / ${questions.chemistry.length}`, 15, y); y += 8;
+  doc.text(`Mathematics: ${result.math} / ${questions.math.length}`, 15, y); y += 15;
+
+  doc.save(`${result.name}_${result.roll}_Result.pdf`);
+}
+
+function clearAllResults() {
+  if (confirm("Are you sure you want to clear all test results?")) {
+    localStorage.removeItem('testResults');
+    testResults = [];
+    renderAdminResults();
+  }
+}
+
+// Initialize admin results on load
+window.onload = function() {
+  testResults = JSON.parse(localStorage.getItem('testResults')) || [];
+};
+</script>
+</body>
+</html>

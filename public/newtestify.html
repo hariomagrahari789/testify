@@ -1,0 +1,2797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testify - AI-Powered Exam Prep Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f1f;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --tertiary: #45B7D1;
+            --accent: #9B59B6;
+            --bg-dark: #0f0f1f;
+            --bg-card: #1a1a2a;
+            --bg-light: #13131f;
+            --border: #2a2a3a;
+            --text-muted: #888;
+            --text-secondary: #aaa;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════ */
+        /* LANDING PAGE */
+        /* ═══════════════════════════════════════════════════════════════ */
+        .landing-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0f1f 0%, #1a0f2e 50%, #0f0f1f 100%);
+            overflow-y: auto;
+        }
+
+        .landing-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 40px;
+            background: rgba(19, 19, 31, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .landing-logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .landing-nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .landing-nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .landing-nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .landing-btn {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .landing-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .landing-hero {
+            text-align: center;
+            padding: 100px 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .landing-hero h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .landing-hero h1 span {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4, #45B7D1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .landing-hero p {
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-bottom: 32px;
+            line-height: 1.8;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .landing-hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .landing-hero-btn-primary {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: #fff;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .landing-hero-btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 50px rgba(255, 107, 107, 0.3);
+        }
+
+        .landing-hero-btn-secondary {
+            background: transparent;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            padding: 14px 38px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .landing-hero-btn-secondary:hover {
+            background: var(--secondary);
+            color: #000;
+        }
+
+        .landing-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 60px;
+            padding: 40px;
+            background: rgba(255, 107, 107, 0.05);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .landing-stat-item {
+            text-align: center;
+        }
+
+        .landing-stat-value {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .landing-stat-label {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .landing-features {
+            padding: 80px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .landing-features h2 {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 50px;
+        }
+
+        .landing-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .landing-exams {
+            padding: 80px 40px;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05), rgba(78, 205, 196, 0.05));
+            border-top: 1px solid var(--border);
+        }
+
+        .landing-exams h2 {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 50px;
+        }
+
+        .landing-exams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .exam-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .exam-card:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .exam-card-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .exam-card-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .exam-card-desc {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .landing-footer {
+            padding: 40px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════ */
+        /* MAIN APP */
+        /* ═══════════════════════════════════════════════════════════════ */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            background: var(--bg-dark);
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-light);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: all 0.3s;
+            overflow-y: auto;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-260px);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-logo {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sidebar-close-btn {
+            background: transparent;
+            border: none;
+            color: #666;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .user-card {
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .user-info {
+            flex: 1;
+            font-size: 12px;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .user-email {
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .user-exam {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: #2E2E3E;
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .sidebar-stats {
+            display: flex;
+            gap: 12px;
+        }
+
+        .sidebar-stat {
+            flex: 1;
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .sidebar-stat-label {
+            color: var(--text-muted);
+            font-size: 10px;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-stat-value {
+            font-weight: 900;
+            font-size: 16px;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 24px;
+            max-width: 1200px;
+            margin-right: auto;
+            transition: margin-left 0.3s;
+        }
+
+        .main-content.sidebar-closed {
+            margin-left: 0;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════ */
+        /* SCREENS */
+        /* ═══════════════════════════════════════════════════════════════ */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* LOGIN SCREEN */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0f1f 0%, #1a0f2e 50%, #0f0f1f 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.2);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-logo {
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .login-tabs {
+            display: flex;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-bottom: 28px;
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            color: #999;
+            transition: all 0.2s;
+        }
+
+        .login-tab.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .form-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-icon {
+            position: absolute;
+            left: 14px;
+            font-size: 16px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: #0a0a14;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px 12px 42px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+        }
+
+        .form-select {
+            width: 100%;
+            background: #0a0a14;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .form-select option {
+            background: #1a1a2a;
+            color: #fff;
+        }
+
+        .error-box {
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid rgba(255, 107, 107, 0.4);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--primary);
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .error-box.show {
+            display: block;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 16px;
+            color: #555;
+            font-size: 12px;
+        }
+
+        .login-toggle {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* HOME SCREEN */
+        .hero-section {
+            text-align: center;
+            padding: 48px 20px 36px;
+            border-bottom: 1px solid var(--border);
+            background: radial-gradient(ellipse at 50% 0%, rgba(255, 107, 107, 0.1), transparent 70%);
+            margin: -24px -24px 24px -24px;
+            padding-left: calc(20px + 24px);
+            padding-right: calc(20px + 24px);
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            line-height: 1.15;
+        }
+
+        .hero-subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto 24px;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+        }
+
+        .hero-btn {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 14px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .exam-card-home {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .exam-card-home:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .exam-icon-home {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 12px;
+        }
+
+        .exam-label-home {
+            font-weight: 800;
+            color: #fff;
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+
+        .exam-desc-home {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .chart-title {
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        /* SELECT SCREEN */
+        .select-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 40px;
+        }
+
+        .select-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .select-card:hover {
+            transform: scale(1.02);
+        }
+
+        .select-card.active {
+            border-color: var(--primary);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+            margin-bottom: 24px;
+        }
+
+        .mode-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .mode-card.active {
+            border-color: var(--primary);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .mode-title {
+            font-weight: 800;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .mode-desc {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .start-section {
+            text-align: center;
+        }
+
+        /* QUIZ SCREEN */
+        .quiz-container {
+            min-height: 100vh;
+            background: var(--bg-dark);
+            margin: -24px -24px -24px -24px;
+        }
+
+        .quiz-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border);
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quiz-timer {
+            font-family: monospace;
+            font-weight: 900;
+            font-size: 18px;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 4px 12px;
+        }
+
+        .quiz-progress-bar {
+            height: 4px;
+            background: #1a1a2a;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .quiz-content {
+            display: flex;
+            gap: 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .question-box {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .question-number {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 17px;
+            font-weight: 600;
+            color: #f0f0ff;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .options-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid;
+            border-radius: 12px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: left;
+            transition: all 0.15s;
+            background: #111;
+            color: #bbb;
+            border-color: #2a2a3f;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .option-btn.selected {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .option-label {
+            min-width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 12px;
+            background: #2a2a3f;
+            color: #999;
+            flex-shrink: 0;
+        }
+
+        .option-btn.selected .option-label {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            background: #0a0a14;
+            color: #aaa;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .palette-sidebar {
+            width: 200px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            margin-left: 20px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .palette-title {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+        }
+
+        .palette-btn {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 600;
+            background: #151520;
+            color: #aaa;
+            transition: all 0.2s;
+        }
+
+        .palette-btn.answered {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .palette-btn.current {
+            border: 2px solid var(--primary);
+        }
+
+        /* NOTES SCREEN */
+        .notes-exam-select {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .select-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .select-label {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .note-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .note-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .note-card.active {
+            border-color: var(--primary);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .note-title {
+            font-weight: 800;
+            color: #fff;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .note-preview {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .notes-detail {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .notes-detail-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .notes-detail-content {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .download-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        /* RESULT SCREEN */
+        .result-hero {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .result-score {
+            font-size: 64px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .result-grade {
+            display: inline-block;
+            border: 3px solid var(--primary);
+            border-radius: 99px;
+            padding: 6px 26px;
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .result-stats {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .result-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .ai-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .ai-title {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .tips-box {
+            background: #0a0a14;
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .tips-box ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .tips-box li {
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+
+        .result-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        /* HISTORY SCREEN */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 18px;
+        }
+
+        .history-icon {
+            font-size: 24px;
+        }
+
+        .history-info {
+            flex: 1;
+        }
+
+        .history-title {
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .history-date {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .history-score {
+            font-weight: 900;
+            font-size: 24px;
+        }
+
+        /* SETTINGS SCREEN */
+        .settings-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .settings-group {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 14px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .setting-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 18px;
+        }
+
+        .setting-label {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .setting-input {
+            background: #0a0a14;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .setting-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* TOGGLE */
+        .toggle {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            border-radius: 13px;
+            background: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            padding: 0;
+        }
+
+        .toggle.on {
+            background: var(--primary);
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            transition: all 0.2s;
+        }
+
+        .toggle.on::after {
+            left: 24px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .quiz-content {
+                flex-direction: column;
+            }
+
+            .palette-sidebar {
+                width: 100%;
+                margin-left: 0;
+                margin-top: 20px;
+            }
+
+            .landing-navbar {
+                padding: 12px 20px;
+            }
+
+            .landing-nav-links {
+                display: none;
+            }
+
+            .landing-hero {
+                padding: 60px 20px;
+            }
+
+            .landing-hero h1 {
+                font-size: 40px;
+            }
+
+            .landing-features,
+            .landing-exams {
+                padding: 40px 20px;
+            }
+
+            .landing-features h2,
+            .landing-exams h2 {
+                font-size: 28px;
+            }
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- LANDING PAGE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div id="landingPage" class="landing-container">
+    <nav class="landing-navbar">
+        <div class="landing-logo">Testify</div>
+        <div class="landing-nav-links">
+            <a onclick="scrollToFeatures()">Features</a>
+            <a onclick="scrollToExams()">Exams</a>
+            <a onclick="showLoginPage('login')">Sign In</a>
+            <button class="landing-btn" onclick="showLoginPage('signup')">Get Started</button>
+        </div>
+    </nav>
+
+    <div class="landing-hero">
+        <h1><span>Testify</span> Your Potential</h1>
+        <p>Master JEE, NEET, GATE & UPSC with AI-powered tests, 40+ questions per subject, and comprehensive short notes</p>
+        <div class="landing-hero-buttons">
+            <button class="landing-hero-btn-primary" onclick="showLoginPage('signup')">🚀 Start Free Now</button>
+            <button class="landing-hero-btn-secondary" onclick="scrollToFeatures()">Learn More</button>
+        </div>
+
+        <div class="landing-stats">
+            <div class="landing-stat-item">
+                <div class="landing-stat-value">10,000+</div>
+                <div class="landing-stat-label">Active Students</div>
+            </div>
+            <div class="landing-stat-item">
+                <div class="landing-stat-value">40+</div>
+                <div class="landing-stat-label">Questions/Subject</div>
+            </div>
+            <div class="landing-stat-item">
+                <div class="landing-stat-value">92%</div>
+                <div class="landing-stat-label">Success Rate</div>
+            </div>
+            <div class="landing-stat-item">
+                <div class="landing-stat-value">24/7</div>
+                <div class="landing-stat-label">AI Support</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="featuresSection" class="landing-features">
+        <h2>✨ Why Testify?</h2>
+        <div class="landing-features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">40+ Questions/Subject</div>
+                <div class="feature-desc">Comprehensive question bank covering all topics with real exam patterns</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <div class="feature-title">Short Notes</div>
+                <div class="feature-desc">Downloadable short notes for quick revision and last-minute prep</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <div class="feature-title">AI Coach</div>
+                <div class="feature-desc">Personalized feedback, grade, tips, and predicted rank after every test</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Live Analytics</div>
+                <div class="feature-desc">Track progress with interactive charts and detailed performance insights</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <div class="feature-title">Real Exam Timer</div>
+                <div class="feature-desc">Full Syllabus tests with actual exam timing and real patterns</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <div class="feature-title">Mobile Friendly</div>
+                <div class="feature-desc">Study anywhere, anytime on any device with full responsive design</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="examsSection" class="landing-exams">
+        <h2>🎯 Supported Exams</h2>
+        <div class="landing-exams-grid">
+            <div class="exam-card" onclick="showLoginPage('signup')">
+                <div class="exam-card-icon">⚙️</div>
+                <div class="exam-card-title">JEE</div>
+                <div class="exam-card-desc">Joint Entrance Examination</div>
+            </div>
+            <div class="exam-card" onclick="showLoginPage('signup')">
+                <div class="exam-card-icon">🩺</div>
+                <div class="exam-card-title">NEET</div>
+                <div class="exam-card-desc">National Medical Entrance</div>
+            </div>
+            <div class="exam-card" onclick="showLoginPage('signup')">
+                <div class="exam-card-icon">💻</div>
+                <div class="exam-card-title">GATE</div>
+                <div class="exam-card-desc">Graduate Aptitude Test</div>
+            </div>
+            <div class="exam-card" onclick="showLoginPage('signup')">
+                <div class="exam-card-icon">🏛️</div>
+                <div class="exam-card-title">UPSC</div>
+                <div class="exam-card-desc">Civil Services Exam</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="landing-footer">
+        <p>&copy; 2026 Testify - India's Smartest Exam Prep Platform | All Rights Reserved</p>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- LOGIN SCREEN -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div id="loginPage" class="login-container" style="display: none;">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-logo">
+                <span style="background: linear-gradient(135deg, #FF6B6B, #4ECDC4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">T</span>estify
+            </div>
+            <div class="login-subtitle">India's Smartest Exam Prep Platform</div>
+        </div>
+
+        <div class="login-tabs">
+            <button class="login-tab active" onclick="switchLoginMode('login')">Sign In</button>
+            <button class="login-tab" onclick="switchLoginMode('signup')">Sign Up</button>
+        </div>
+
+        <div id="loginError" class="error-box"></div>
+
+        <div id="signupFields" style="display: none;">
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <div class="form-input-wrapper">
+                    <span class="form-icon">👤</span>
+                    <input type="text" id="nameInput" class="form-input" placeholder="Your full name">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <div class="form-input-wrapper">
+                <span class="form-icon">📧</span>
+                <input type="email" id="emailInput" class="form-input" placeholder="you@example.com">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="form-input-wrapper">
+                <span class="form-icon">🔒</span>
+                <input type="password" id="passwordInput" class="form-input" placeholder="Min 6 characters">
+            </div>
+        </div>
+
+        <div id="examSelectField" class="form-group" style="display: none;">
+            <label class="form-label">Target Exam</label>
+            <select id="examSelect" class="form-select">
+                <option value="">Select your exam</option>
+                <option value="JEE">⚙️ JEE - Joint Entrance Examination</option>
+                <option value="NEET">🩺 NEET - National Medical Entrance</option>
+                <option value="GATE">💻 GATE - Graduate Aptitude Test</option>
+                <option value="UPSC">🏛️ UPSC - Civil Services Exam</option>
+            </select>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="handleLogin()">Sign In →</button>
+
+        <div class="login-footer">
+            <span id="toggleText">Don't have an account? <span class="login-toggle" onclick="switchLoginMode('signup')">Sign Up</span></span>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- APP CONTAINER -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div id="appContainer" class="app-container" style="display: none;">
+    <!-- SIDEBAR -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">T estify</div>
+            <button class="sidebar-close-btn" onclick="toggleSidebar()">✕</button>
+        </div>
+
+        <div class="user-card">
+            <div class="user-avatar" id="userAvatar">S</div>
+            <div class="user-info">
+                <div class="user-name" id="userName">Student</div>
+                <div class="user-email" id="userEmail">student@testify.com</div>
+                <div class="user-exam" id="userExam">Target: JEE</div>
+            </div>
+        </div>
+
+        <div class="nav-menu">
+            <button class="nav-item active" onclick="switchScreen('home')">
+                <span class="nav-icon">🏠</span> Home
+            </button>
+            <button class="nav-item" onclick="switchScreen('select')">
+                <span class="nav-icon">📝</span> Take Test
+            </button>
+            <button class="nav-item" onclick="switchScreen('notes')">
+                <span class="nav-icon">📚</span> Short Notes
+            </button>
+            <button class="nav-item" onclick="switchScreen('history')">
+                <span class="nav-icon">📊</span> History
+            </button>
+            <button class="nav-item" onclick="switchScreen('settings')">
+                <span class="nav-icon">⚙️</span> Settings
+            </button>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-stats">
+                <div class="sidebar-stat">
+                    <div class="sidebar-stat-label">Tests</div>
+                    <div class="sidebar-stat-value" id="sidebarTests">0</div>
+                </div>
+                <div class="sidebar-stat">
+                    <div class="sidebar-stat-label">Avg</div>
+                    <div class="sidebar-stat-value" id="sidebarAvg">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding: 12px; text-align: center; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted);">
+            <button style="background: transparent; border: none; color: var(--primary); cursor: pointer; font-size: 12px; font-weight: 600;" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- HOME SCREEN -->
+        <div id="homeScreen" class="screen active">
+            <div class="hero-section">
+                <h1 class="hero-title">Welcome to <span style="background: linear-gradient(135deg, #FF6B6B, #4ECDC4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Testify</span></h1>
+                <p class="hero-subtitle">Master your exam with AI-powered tests, 40+ questions per subject, and comprehensive short notes</p>
+                <div class="hero-buttons">
+                    <button class="hero-btn" onclick="switchScreen('select')">🎯 Start a Test</button>
+                    <button class="hero-btn" onclick="switchScreen('notes')">📚 View Notes</button>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTests">0</div>
+                        <div class="stat-label">Tests Taken</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgScore">0%</div>
+                        <div class="stat-label">Avg Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="bestScore">0%</div>
+                        <div class="stat-label">Best Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">40+</div>
+                        <div class="stat-label">Qs/Subject</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">📊 Your Progress</h2>
+                <div class="chart-card">
+                    <div class="chart-title">Score by Exam</div>
+                    <canvas id="homeChart" style="max-height: 300px;"></canvas>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">🎯 All Exams</h2>
+                <div class="grid-4">
+                    <div class="exam-card-home" onclick="selectExamAndTest('JEE')">
+                        <div class="exam-icon-home" style="background: rgba(255, 107, 107, 0.2); color: #FF6B6B;">⚙️</div>
+                        <div class="exam-label-home">JEE</div>
+                        <div class="exam-desc-home">Joint Entrance Examination</div>
+                    </div>
+                    <div class="exam-card-home" onclick="selectExamAndTest('NEET')">
+                        <div class="exam-icon-home" style="background: rgba(78, 205, 196, 0.2); color: #4ECDC4;">🩺</div>
+                        <div class="exam-label-home">NEET</div>
+                        <div class="exam-desc-home">National Medical Entrance</div>
+                    </div>
+                    <div class="exam-card-home" onclick="selectExamAndTest('GATE')">
+                        <div class="exam-icon-home" style="background: rgba(69, 183, 209, 0.2); color: #45B7D1;">💻</div>
+                        <div class="exam-label-home">GATE</div>
+                        <div class="exam-desc-home">Graduate Aptitude Test</div>
+                    </div>
+                    <div class="exam-card-home" onclick="selectExamAndTest('UPSC')">
+                        <div class="exam-icon-home" style="background: rgba(155, 89, 182, 0.2); color: #9B59B6;">🏛️</div>
+                        <div class="exam-label-home">UPSC</div>
+                        <div class="exam-desc-home">Civil Services Exam</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">🕐 Recent Tests</h2>
+                <div id="recentTests" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="text-align: center; color: var(--text-muted); padding: 40px; font-size: 14px;">No tests taken yet. Start your first test!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SELECT SCREEN -->
+        <div id="selectScreen" class="screen">
+            <h2 class="section-title">📝 Select Exam</h2>
+            <div class="select-grid">
+                <div class="select-card" onclick="selectExam('JEE')" data-exam="JEE">
+                    <div style="font-size: 32px; margin-bottom: 12px;">⚙️</div>
+                    <div class="exam-label-home">JEE</div>
+                    <div class="exam-desc-home">Joint Entrance Examination</div>
+                </div>
+                <div class="select-card" onclick="selectExam('NEET')" data-exam="NEET">
+                    <div style="font-size: 32px; margin-bottom: 12px;">🩺</div>
+                    <div class="exam-label-home">NEET</div>
+                    <div class="exam-desc-home">National Medical Entrance</div>
+                </div>
+                <div class="select-card" onclick="selectExam('GATE')" data-exam="GATE">
+                    <div style="font-size: 32px; margin-bottom: 12px;">💻</div>
+                    <div class="exam-label-home">GATE</div>
+                    <div class="exam-desc-home">Graduate Aptitude Test</div>
+                </div>
+                <div class="select-card" onclick="selectExam('UPSC')" data-exam="UPSC">
+                    <div style="font-size: 32px; margin-bottom: 12px;">🏛️</div>
+                    <div class="exam-label-home">UPSC</div>
+                    <div class="exam-desc-home">Civil Services Exam</div>
+                </div>
+            </div>
+
+            <div id="testModeSection" style="display: none; margin-top: 40px;">
+                <h2 class="section-title">Select Test Mode</h2>
+                <div class="mode-grid" id="modeGrid"></div>
+                <div style="text-align: center;">
+                    <button class="hero-btn" id="startTestBtn" onclick="startTest()" style="display: none;">🚀 Start Test →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quizScreen" class="screen">
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <span style="font-size: 24px;" id="quizExamIcon">⚙️</span>
+                    <span id="quizExamLabel" style="font-weight: 700;">JEE</span>
+                    <span id="questionCounter" style="color: var(--text-muted); font-size: 12px;">Q1/10</span>
+                    <div class="quiz-timer" id="quizTimer" style="color: #4ECDC4;">10:00</div>
+                    <button class="hero-btn" style="margin-left: auto;" onclick="submitQuiz()">Submit</button>
+                </div>
+                <div class="quiz-progress-bar">
+                    <div class="quiz-progress-fill" id="progressBar"></div>
+                </div>
+                <div class="quiz-content">
+                    <div class="question-box">
+                        <div class="question-number" id="questionSubject">Physics</div>
+                        <div class="question-text" id="questionText">Question text here</div>
+                        <div class="options-box" id="optionsBox"></div>
+                        <div class="nav-buttons">
+                            <button class="nav-btn" onclick="prevQuestion()">← Prev</button>
+                            <button class="nav-btn" onclick="nextQuestion()">Next →</button>
+                        </div>
+                    </div>
+                    <div class="palette-sidebar">
+                        <div class="palette-title">Question Palette</div>
+                        <div class="palette-grid" id="paletteGrid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTES SCREEN -->
+        <div id="notesScreen" class="screen">
+            <h2 class="section-title">📚 Short Notes</h2>
+            <div class="notes-exam-select">
+                <div class="select-group">
+                    <label class="select-label">Select Exam:</label>
+                    <select class="form-select" id="notesExamSelect" onchange="updateNotesSubjects()">
+                        <option value="JEE">⚙️ JEE</option>
+                        <option value="NEET">🩺 NEET</option>
+                        <option value="GATE">💻 GATE</option>
+                        <option value="UPSC">🏛️ UPSC</option>
+                    </select>
+                </div>
+                <div class="select-group">
+                    <label class="select-label">Select Subject:</label>
+                    <select class="form-select" id="notesSubjectSelect" onchange="displayNotes()"></select>
+                </div>
+            </div>
+            <div class="notes-grid" id="notesGrid"></div>
+            <div class="notes-detail" id="notesDetail" style="display: none;"></div>
+        </div>
+
+        <!-- HISTORY SCREEN -->
+        <div id="historyScreen" class="screen">
+            <h2 class="section-title">📊 Test History</h2>
+            <div class="chart-card" style="margin-bottom: 24px;">
+                <div class="chart-title">Performance Chart</div>
+                <canvas id="historyChart" style="max-height: 300px;"></canvas>
+            </div>
+            <div id="historyList" class="history-list"></div>
+        </div>
+
+        <!-- SETTINGS SCREEN -->
+        <div id="settingsScreen" class="screen">
+            <h2 class="section-title">⚙️ Settings</h2>
+            <div class="settings-box">
+                <div class="settings-group">👤 Profile</div>
+                <div class="setting-item">
+                    <label class="setting-label">Full Name</label>
+                    <input type="text" id="settingsName" class="setting-input" placeholder="Your name">
+                </div>
+                <div class="setting-item">
+                    <label class="setting-label">Email</label>
+                    <input type="email" id="settingsEmail" class="setting-input" disabled>
+                </div>
+                <div class="setting-item">
+                    <label class="setting-label">Target Exam</label>
+                    <select id="settingsExam" class="setting-input">
+                        <option value="JEE">⚙️ JEE</option>
+                        <option value="NEET">🩺 NEET</option>
+                        <option value="GATE">💻 GATE</option>
+                        <option value="UPSC">🏛️ UPSC</option>
+                    </select>
+                </div>
+                <button class="hero-btn" style="margin-top: 20px;" onclick="saveSettings()">Save Changes</button>
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="resultScreen" class="screen">
+            <div class="result-hero">
+                <div class="result-score" id="resultScore">75%</div>
+                <div class="result-grade" id="resultGrade">B</div>
+                <div class="result-stats">
+                    <span id="correctCount">✓ 30 Correct</span>
+                    <span id="wrongCount">✗ 10 Wrong</span>
+                    <span id="skippedCount">— 0 Skipped</span>
+                </div>
+            </div>
+
+            <div class="result-charts">
+                <div class="chart-card">
+                    <div class="chart-title">Score Breakdown</div>
+                    <canvas id="pieChart" style="max-height: 250px;"></canvas>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Subject-wise Accuracy</div>
+                    <canvas id="barChart" style="max-height: 250px;"></canvas>
+                </div>
+            </div>
+
+            <div class="ai-card">
+                <div class="ai-title">🤖 AI Coach Analysis</div>
+                <p id="aiSummary" style="margin-bottom: 12px;">Summary text</p>
+                <div class="tips-box">
+                    <strong>💡 Tips to Improve:</strong>
+                    <ul id="aiTips"></ul>
+                </div>
+            </div>
+
+            <div class="result-buttons">
+                <button class="hero-btn" onclick="switchScreen('home')">🏠 Home</button>
+                <button class="hero-btn" onclick="retakeTest()">🔄 Retake</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    // ═══════════════════════════════════════════════════════════════
+    // EXAM DATA
+    // ═══════════════════════════════════════════════════════════════
+    const EXAMS = {
+        JEE: { label: 'JEE', icon: '⚙️', color: '#FF6B6B', subjects: ['Physics', 'Chemistry', 'Mathematics'], time: 180 },
+        NEET: { label: 'NEET', icon: '🩺', color: '#4ECDC4', subjects: ['Physics', 'Chemistry', 'Biology'], time: 200 },
+        GATE: { label: 'GATE', icon: '💻', color: '#45B7D1', subjects: ['Eng Mathematics', 'Aptitude', 'Core'], time: 180 },
+        UPSC: { label: 'UPSC', icon: '🏛️', color: '#9B59B6', subjects: ['Gen Studies', 'CSAT', 'Current Affairs'], time: 120 }
+    };
+
+    const QUESTIONS = {
+        JEE: {
+            Physics: [
+                { q: 'SI unit of electric charge:', opts: ['Ampere', 'Volt', 'Coulomb', 'Ohm'], ans: 2 },
+                { q: 'Which law states F = ma?', opts: ["Newton's 1st", "Newton's 2nd", "Newton's 3rd", "Hooke's Law"], ans: 1 },
+                { q: 'Speed of light in vacuum:', opts: ['3×10⁶ m/s', '3×10⁸ m/s', '3×10¹⁰ m/s', '3×10⁴ m/s'], ans: 1 },
+                { q: 'Unit of magnetic flux:', opts: ['Tesla', 'Weber', 'Gauss', 'Henry'], ans: 1 },
+                { q: 'Torque is maximum at angle:', opts: ['0°', '45°', '90°', '180°'], ans: 2 },
+                { q: 'Escape velocity of Earth:', opts: ['7.9 km/s', '9.8 km/s', '11.2 km/s', '3×10⁸'], ans: 2 },
+                { q: 'Power = ?', opts: ['Joule', 'Newton', 'Watt', 'Pascal'], ans: 2 },
+                { q: 'Zero resistance at 0K shows:', opts: ['Conductor', 'Semiconductor', 'Superconductor', 'Insulator'], ans: 2 },
+                { q: 'Concave mirror forms virtual image?', opts: ['Always', 'Sometimes', 'Never', 'Depends'], ans: 2 },
+                { q: 'Photoelectric increasing intensity increases:', opts: ['Energy', 'Speed', 'Number', 'Frequency'], ans: 2 }
+            ],
+            Chemistry: [
+                { q: 'Atomic number of Nitrogen:', opts: ['6', '7', '8', '9'], ans: 1 },
+                { q: 'pH of neutral solution:', opts: ['0', '7', '14', '10'], ans: 1 },
+                { q: 'Chemical formula table salt:', opts: ['KCl', 'NaCl', 'CaCl₂', 'MgCl₂'], ans: 1 },
+                { q: "Avogadro's number:", opts: ['6.02×10²³', '6.02×10²²', '3.01×10²³', '1.38×10²³'], ans: 0 },
+                { q: 'Gas from Zn + H₂SO₄:', opts: ['O₂', 'CO₂', 'H₂', 'N₂'], ans: 2 },
+                { q: 'Hybridisation of C in ethyne:', opts: ['sp³', 'sp²', 'sp', 'sp³d'], ans: 2 },
+                { q: 'Molar mass of H₂SO₄:', opts: ['96', '98', '100', '94'], ans: 1 },
+                { q: 'IUPAC of CH₃CHO:', opts: ['Methanol', 'Ethanal', 'Propanol', 'Acid'], ans: 1 },
+                { q: 'Oxidation state Mn in KMnO₄:', opts: ['+5', '+6', '+7', '+4'], ans: 2 },
+                { q: 'Bonds in N₂:', opts: ['1 single', '1 double', '1 triple', '2 double'], ans: 2 }
+            ],
+            Mathematics: [
+                { q: 'Derivative of sin(x):', opts: ['cos(x)', '-cos(x)', 'tan(x)', '-sin(x)'], ans: 0 },
+                { q: '∫e^x dx =', opts: ['e^x + C', 'xe^x + C', 'e^(x+1) + C', '1/e^x + C'], ans: 0 },
+                { q: 'Roots of x² - 5x + 6 = 0:', opts: ['2,3', '1,6', '-2,-3', '2,-3'], ans: 0 },
+                { q: 'sin(30°) =', opts: ['√3/2', '1/2', '1/√2', '1'], ans: 1 },
+                { q: 'log₁₀(1000) =', opts: ['2', '3', '4', '10'], ans: 1 },
+                { q: 'Ways to arrange 5 books:', opts: ['25', '60', '120', '720'], ans: 2 },
+                { q: 'Sum infinite GP:', opts: ['1', '1.5', '2', '2.5'], ans: 2 },
+                { q: "i² where i = √(-1):", opts: ['1', '-1', 'i', '-i'], ans: 1 },
+                { q: 'Area of triangle (0,0),(4,0),(0,3):', opts: ['6', '7', '12', '3'], ans: 0 },
+                { q: '∫₀¹ x² dx =', opts: ['1/4', '1/3', '1/2', '1'], ans: 1 }
+            ]
+        },
+        NEET: {
+            Physics: [
+                { q: 'SI unit of force:', opts: ['Joule', 'Newton', 'Pascal', 'Watt'], ans: 1 },
+                { q: 'Ohms law relates:', opts: ['Power', 'V, I, R', 'Charge', 'Mass'], ans: 1 },
+                { q: 'MRI based on:', opts: ['X-rays', 'Magnetic', 'Ultrasound', 'IR'], ans: 1 },
+                { q: '1 kcal = __ J:', opts: ['4200', '420', '42', '42000'], ans: 0 },
+                { q: 'Frequency ultrasound:', opts: ['<20', '20-20000', '>20000', '200-2000'], ans: 2 },
+                { q: 'Color max wavelength:', opts: ['Violet', 'Blue', 'Green', 'Red'], ans: 3 },
+                { q: 'Lens correct myopia:', opts: ['Convex', 'Concave', 'Bifocal', 'Cylindrical'], ans: 1 },
+                { q: 'Power lens 25cm:', opts: ['2D', '4D', '25D', '0.04D'], ans: 1 },
+                { q: 'Wave NOT need medium:', opts: ['Sound', 'Water', 'EM', 'Seismic'], ans: 2 },
+                { q: 'Pitch depends on:', opts: ['Amplitude', 'Frequency', 'Wavelength', 'Speed'], ans: 1 }
+            ],
+            Chemistry: [
+                { q: 'Element bone formation:', opts: ['Iron', 'Calcium', 'Potassium', 'Sodium'], ans: 1 },
+                { q: 'pH of blood:', opts: ['6.8', '7.4', '8.0', '5.5'], ans: 1 },
+                { q: 'DNA stands for:', opts: ['Deoxyribonucleic', 'Dinitrogen', 'Dinuclear', 'None'], ans: 0 },
+                { q: 'Insulin is a:', opts: ['Lipid', 'Carb', 'Protein', 'Nucleic'], ans: 2 },
+                { q: 'Vitamin C deficiency:', opts: ['Rickets', 'Scurvy', 'Night', 'Beriberi'], ans: 1 },
+                { q: 'Most abundant gas:', opts: ['O₂', 'CO₂', 'N₂', 'Ar'], ans: 2 },
+                { q: 'Noble gas:', opts: ['F', 'Ne', 'Cl', 'Br'], ans: 1 },
+                { q: 'Haemoglobin contains:', opts: ['Cu', 'Fe', 'Zn', 'Mg'], ans: 1 },
+                { q: 'Acid in gastric juice:', opts: ['H₂SO₄', 'HCl', 'HNO₃', 'CH₃COOH'], ans: 1 },
+                { q: 'Cellulose polymer of:', opts: ['Fructose', 'Glucose', 'Sucrose', 'Maltose'], ans: 1 }
+            ],
+            Biology: [
+                { q: 'Powerhouse of cell:', opts: ['Nucleus', 'Ribosome', 'Mitochondria', 'Golgi'], ans: 2 },
+                { q: 'Chromosomes in human cell:', opts: ['23', '46', '44', '48'], ans: 1 },
+                { q: 'Photosynthesis occurs in:', opts: ['Mito', 'Chloroplast', 'Nucleus', 'Vacuole'], ans: 1 },
+                { q: 'Blood group discovered by:', opts: ['Fleming', 'Landsteiner', 'Pasteur', 'Jenner'], ans: 1 },
+                { q: 'Longest bone human body:', opts: ['Humerus', 'Tibia', 'Femur', 'Fibula'], ans: 2 },
+                { q: 'Brain controls heartbeat:', opts: ['Cerebrum', 'Cerebellum', 'Medulla', 'Thalamus'], ans: 2 },
+                { q: 'Functional unit kidney:', opts: ['Neuron', 'Nephron', 'Hepato', 'Alveolus'], ans: 1 },
+                { q: 'Plasmid found in:', opts: ['Virus', 'Bacteria', 'Fungi', 'Algae'], ans: 1 },
+                { q: 'Plasmodium causes:', opts: ['Dengue', 'Malaria', 'Typhoid', 'Cholera'], ans: 1 },
+                { q: 'Gene coined by:', opts: ['Mendel', 'Bateson', 'Johannsen', 'Morgan'], ans: 2 }
+            ]
+        },
+        GATE: {
+            'Eng Mathematics': [
+                { q: 'Laplace of e^at:', opts: ['1/(s-a)', '1/(s+a)', 'a/(s²+a²)', 's/(s²+a²)'], ans: 0 },
+                { q: 'Rank 3×3 identity:', opts: ['0', '1', '2', '3'], ans: 3 },
+                { q: '∮ F·dr closed (conservative):', opts: ['∞', '1', '0', '-1'], ans: 2 },
+                { q: 'Eigenvalues [[2,0],[0,3]]:', opts: ['2,3', '1,0', '5,6', '0,1'], ans: 0 },
+                { q: 'Z-transform δ[n]:', opts: ['0', '1', 'z', '1/z'], ans: 1 },
+                { q: 'Fourier Gaussian:', opts: ['Uniform', 'Gaussian', 'Laplacian', 'Sinusoidal'], ans: 1 },
+                { q: 'Newton-Raphson for:', opts: ['Integration', 'Root', 'Differentiation', 'Interpolation'], ans: 1 },
+                { q: 'P(A∪B) = P(A)+P(B) when:', opts: ['Independent', 'Mutually exclusive', 'Always', 'Never'], ans: 1 },
+                { q: 'A² = A implies:', opts: ['Invertible', 'Idempotent', 'Orthogonal', 'Nilpotent'], ans: 1 },
+                { q: 'Poisson λ=4, mean:', opts: ['2', '4', '8', '16'], ans: 1 }
+            ],
+            'Aptitude': [
+                { q: '5 workers 8 days, 8 workers:', opts: ['5', '4', '6', '10'], ans: 0 },
+                { q: 'Correct spelling:', opts: ['Recieve', 'Receive', 'Receve', 'Reciave'], ans: 1 },
+                { q: '12.5% of 200:', opts: ['20', '25', '15', '30'], ans: 1 },
+                { q: 'Antonym BENEVOLENT:', opts: ['Kind', 'Malevolent', 'Generous', 'Peaceful'], ans: 1 },
+                { q: 'Train 150m, pole 15s, speed:', opts: ['36', '54', '72', '90'], ans: 0 },
+                { q: 'A:B = 2:3, B:C = 4:5, A:C:', opts: ['8:15', '2:5', '4:9', '6:10'], ans: 0 },
+                { q: 'Correct punctuation:', opts: ["It's a dog", 'Its a dog', "Its' a dog", 'It s a dog'], ans: 0 },
+                { q: 'Series 1,4,9,16,25,__:', opts: ['30', '36', '35', '49'], ans: 1 },
+                { q: 'Synonym VERBOSE:', opts: ['Brief', 'Wordy', 'Silent', 'Clear'], ans: 1 },
+                { q: 'A & B work 10 & 15 days:', opts: ['5', '6', '8', '12'], ans: 1 }
+            ],
+            'Core': [
+                { q: 'O(n log n) of:', opts: ['Bubble', 'Merge', 'Linear', 'Insertion'], ans: 1 },
+                { q: 'TCP/IP layers:', opts: ['4', '5', '7', '3'], ans: 0 },
+                { q: 'Volatile memory:', opts: ['HDD', 'ROM', 'SSD', 'RAM'], ans: 3 },
+                { q: 'OS manages:', opts: ['Code', 'Hardware', 'Circuits', 'None'], ans: 1 },
+                { q: 'All 4 Coffman → :', opts: ['Starvation', 'Deadlock', 'Thrashing', 'Race'], ans: 1 },
+                { q: 'LIFO structure:', opts: ['Queue', 'Stack', 'Tree', 'Graph'], ans: 1 },
+                { q: "2's complement 0101:", opts: ['1010', '1011', '0101', '1001'], ans: 1 },
+                { q: 'Secure protocol:', opts: ['HTTP', 'FTP', 'HTTPS', 'SMTP'], ans: 2 },
+                { q: 'Normalisation removes:', opts: ['Redundancy', 'Rows', 'Columns', 'Indexes'], ans: 0 },
+                { q: 'Best sort nearly sorted:', opts: ['Quick', 'Merge', 'Insertion', 'Heap'], ans: 2 }
+            ]
+        },
+        UPSC: {
+            'Gen Studies': [
+                { q: 'Constitutional head India:', opts: ['PM', 'President', 'CJI', 'Speaker'], ans: 1 },
+                { q: 'Article 370 about:', opts: ['Speech', 'J&K', 'Reservation', 'Principles'], ans: 1 },
+                { q: "River 'Sorrow Bengal':", opts: ['Ganga', 'Yamuna', 'Damodar', 'Brahmaputra'], ans: 2 },
+                { q: "India's first satellite:", opts: ['INSAT', 'Aryabhata', 'GSAT', 'Chandrayaan'], ans: 1 },
+                { q: 'Operation Flood about:', opts: ['Control', 'Milk', 'Irrigation', 'Relief'], ans: 1 },
+                { q: 'Panchayat Raj amendment:', opts: ['42', '73', '74', '86'], ans: 1 },
+                { q: 'Highest peak India:', opts: ['Everest', 'K2', 'Kangchenjunga', 'Nanda'], ans: 1 },
+                { q: 'Discovery of India author:', opts: ['Gandhi', 'Ambedkar', 'Nehru', 'Tagore'], ans: 2 },
+                { q: 'Article abolishing untouchability:', opts: ['14', '15', '17', '21'], ans: 2 },
+                { q: 'NITI Aayog replaced:', opts: ['Planning', 'Finance', 'Election', 'CAG'], ans: 0 }
+            ],
+            'CSAT': [
+                { q: 'Man 4km N, 3km E, distance:', opts: ['5', '7', '4', '3'], ans: 0 },
+                { q: 'P is Q brother; Q is R sister, P-R:', opts: ['Sister', 'Brother', 'Cousin', 'Uncle'], ans: 1 },
+                { q: 'Series 2,6,12,20,__:', opts: ['28', '30', '32', '36'], ans: 1 },
+                { q: 'NOT prime:', opts: ['2', '3', '9', '7'], ans: 2 },
+                { q: 'Clock 3:00, angle hands:', opts: ['60', '90', '120', '180'], ans: 1 },
+                { q: 'Markup 20%, discount 10%, profit:', opts: ['8%', '10%', '12%', '15%'], ans: 0 },
+                { q: '3x + 7 = 22, x:', opts: ['3', '4', '5', '6'], ans: 2 },
+                { q: 'A taller B; C shorter A; D taller C, tallest:', opts: ['A', 'B', 'C', 'D'], ans: 0 },
+                { q: 'Train 200m, 36 km/h, 100m platform, time:', opts: ['20', '25', '30', '35'], ans: 2 },
+                { q: 'Fibonacci 1,1,2,3,5,8,__:', opts: ['11', '12', '13', '14'], ans: 2 }
+            ],
+            'Current Affairs': [
+                { q: 'G20 2023 held in:', opts: ['Japan', 'Indonesia', 'India', 'USA'], ans: 2 },
+                { q: "India's 1st carrier:", opts: ['Vikrant', 'Viraat', 'Vikramaditya', 'Chakra'], ans: 0 },
+                { q: 'Chandrayaan-3 landed near:', opts: ['North', 'Equator', 'South', 'Far'], ans: 2 },
+                { q: 'FIFA 2022:', opts: ['Russia', 'Brazil', 'Qatar', 'Germany'], ans: 2 },
+                { q: "India's digital currency:", opts: ['e-Rupee', 'RuCoin', 'DigiRs', 'CryptoIN'], ans: 0 },
+                { q: 'Operation Kaveri from:', opts: ['Ukraine', 'Sudan', 'Israel', 'Libya'], ans: 1 },
+                { q: 'PM-PRANAM about:', opts: ['Solar', 'Fertilizer', 'Alt-fertilizer', 'Insurance'], ans: 2 },
+                { q: 'IIT top NIRF 2023:', opts: ['Bombay', 'Delhi', 'Madras', 'Kanpur'], ans: 2 },
+                { q: 'Nobel Peace 2023:', opts: ['Narges', 'Malala', 'Greta', 'UNHCR'], ans: 0 },
+                { q: 'UPI launched in:', opts: ['2014', '2016', '2018', '2020'], ans: 1 }
+            ]
+        }
+    };
+
+    const SHORT_NOTES_DATA = {
+        JEE: {
+            Physics: {
+                sections: [
+                    { title: 'Kinematics', content: 'Motion without force.\n• v = u + at\n• s = ut + ½at²\n• v² = u² + 2as' },
+                    { title: 'Newton\'s Laws', content: '1st: Object stays in motion\n2nd: F = ma\n3rd: Action = Reaction' },
+                    { title: 'Work & Energy', content: 'Work = F·d·cos(θ)\nPower = Work/Time\nKE = ½mv², PE = mgh' },
+                    { title: 'Waves', content: 'v = fλ\nIntensity ∝ (Amplitude)²\nDoppler: f\' = f(v±vo)/(v±vs)' },
+                    { title: 'Electricity', content: 'V = IR\nR = ρL/A\nP = VI = I²R = V²/R' }
+                ]
+            },
+            Chemistry: {
+                sections: [
+                    { title: 'Stoichiometry', content: 'n = m/M\nAvogadro = 6.022×10²³\nLimiting reagent complete' },
+                    { title: 'Atomic Structure', content: 'sp=linear, sp²=trigonal, sp³=tetrahedral\nn, l, m, s quantum numbers' },
+                    { title: 'Bonding', content: 'Ionic: ΔEN>1.7\nCovalent: ΔEN<1.7\nCoordinate: Both e⁻ from one atom' },
+                    { title: 'Thermochemistry', content: 'ΔG = ΔH - TΔS\nMore negative = More spontaneous' },
+                    { title: 'Equilibrium', content: 'Kc = [Products]/[Reactants]\nLe Chatelier opposition' }
+                ]
+            },
+            Mathematics: {
+                sections: [
+                    { title: 'Limits', content: 'lim(x→a) f(x) = L\nL\'Hôpital for 0/0' },
+                    { title: 'Differentiation', content: 'd/dx(xⁿ) = nxⁿ⁻¹\nChain: dy/dx=(dy/du)(du/dx)' },
+                    { title: 'Integration', content: '∫xⁿ dx = xⁿ⁺¹/(n+1) + C\nPartial integration' },
+                    { title: 'Trigonometry', content: 'sin²θ + cos²θ = 1\nsin2θ = 2sinθcosθ' },
+                    { title: 'Geometry', content: 'Circle: (x-h)²+(y-k)²=r²\nParabola: y²=4ax' }
+                ]
+            }
+        },
+        NEET: {
+            Physics: {
+                sections: [
+                    { title: 'Mechanics', content: 'v = d/t, a = Δv/Δt\nF = ma, W = mg' },
+                    { title: 'Thermal', content: 'Temp = avg KE\nQ = mcΔT\nLatent heat phase change' },
+                    { title: 'Optics', content: '1/f = 1/u + 1/v\nm = v/u\nTotal internal reflection' },
+                    { title: 'Modern Physics', content: 'E = hf\nBohr: E = -13.6/n² eV\nN = N₀(1/2)^(t/T)' },
+                    { title: 'Waves', content: 'v = fλ, f = 1/T\nStanding wave: λ = 2L/n' }
+                ]
+            },
+            Chemistry: {
+                sections: [
+                    { title: 'Atomic Structure', content: 'Rutherford nucleus\nBohr fixed orbits\nQuantum probability' },
+                    { title: 'Bonding', content: 'Ionic: Metal loses e⁻\nCovalent: Sharing e⁻\nHydrogen: Weak polar' },
+                    { title: 'Solutions', content: 'Molarity = moles/L\nMolality = moles/kg\nπ = CRT' },
+                    { title: 'Redox', content: 'Oxidation: Loss e⁻\nReduction: Gain e⁻' },
+                    { title: 'Organic', content: 'Saturated: Single bonds\nUnsaturated: Double/triple\nFunctional groups' }
+                ]
+            },
+            Biology: {
+                sections: [
+                    { title: 'Cell Structure', content: 'Prokaryotic: No nucleus\nEukaryotic: Membrane organelles\nNucleus controls cell' },
+                    { title: 'Photosynthesis', content: 'Light: Thylakoid ATP+NADPH\nDark: Stroma fixes CO₂' },
+                    { title: 'Respiration', content: 'Glycolysis: 1 glucose→2 pyruvate\nKrebs: Produces NADH\nETC: 32 ATP' },
+                    { title: 'Genetics', content: 'Dominant: Heterozygous\nRecessive: Homozygous\nDNA double helix' },
+                    { title: 'Evolution', content: 'Natural selection\nMutation change DNA\nAdaptation survival' }
+                ]
+            }
+        },
+        GATE: {
+            'Eng Mathematics': {
+                sections: [
+                    { title: 'Linear Algebra', content: 'Matrix rectangular array\nDet from square\nEigenvalue: Ax=λx' },
+                    { title: 'Calculus', content: 'Derivative rate change\nIntegral reverse\nFundamental theorem' },
+                    { title: 'Complex', content: 'z = a+bi\n|z| = √(a²+b²)\ne^(iθ) = cosθ+isinθ' },
+                    { title: 'Diff Equations', content: 'ODE: One variable\nPDE: Multiple\nOrder highest derivative' },
+                    { title: 'Probability', content: 'P(A) = favorable/total\nP(A∪B) = P(A)+P(B)-P(A∩B)' }
+                ]
+            },
+            'Aptitude': {
+                sections: [
+                    { title: 'Quantitative', content: '% = (Part/Whole)×100\nProfit% = (SP-CP)/CP×100' },
+                    { title: 'Logical', content: 'Syllogism: A→B, B→C⇒A→C\nAnalogy: A:B::C:D' },
+                    { title: 'Verbal', content: 'Reading comprehension\nVocabulary: Synonyms, antonyms\nGrammar' },
+                    { title: 'Data Interpretation', content: 'Tables organized data\nGraphs visual\nCharts pie,bar,line' },
+                    { title: 'Puzzles', content: 'Logic from clues\nMath patterns\nSpatial rotation' }
+                ]
+            },
+            'Core': {
+                sections: [
+                    { title: 'Algorithms', content: 'Time complexity O(n)\nSpace complexity\nBig O notation' },
+                    { title: 'OS', content: 'Process scheduling\nMemory management\nDeadlock prevention' },
+                    { title: 'Networks', content: 'OSI 7 layers\nTCP/IP 4 layers\nRouting protocols' },
+                    { title: 'DBMS', content: 'Relations, normalization\nACID properties\nSQL queries' },
+                    { title: 'OOP', content: 'Encapsulation, inheritance\nPolymorphism\nAbstraction' }
+                ]
+            }
+        },
+        UPSC: {
+            'Gen Studies': {
+                sections: [
+                    { title: 'Constitution', content: 'Preamble: We the people\n395 Articles (470+)\n12 Schedules' },
+                    { title: 'History', content: 'Vedic 1500-600 BCE\nMauryan Ashoka\nBritish 1857-1947' },
+                    { title: 'Geography', content: 'Physical: Mountains, rivers\nPolitical: Borders\nClimate: Monsoon' },
+                    { title: 'Economy', content: 'GDP total goods\nInflation rising prices\nFiscal policy' },
+                    { title: 'IR', content: 'UN United Nations\nNATO alliance\nNon-aligned movement' }
+                ]
+            },
+            'CSAT': {
+                sections: [
+                    { title: 'Quant', content: '% = (Part/Whole)×100\nSI = PRT/100\nCI = P(1+r%)^t' },
+                    { title: 'Logical', content: 'Syllogism deduction\nAnalogy comparison\nCoding pattern' },
+                    { title: 'Verbal', content: 'Reading understand\nVocabulary words\nFill blanks context' },
+                    { title: 'Data Analysis', content: 'Tables rows columns\nGraphs visual\nInference conclusion' },
+                    { title: 'Puzzles', content: 'Logic deduction\nMath number\nSpatial vision' }
+                ]
+            },
+            'Current Affairs': {
+                sections: [
+                    { title: 'Politics', content: 'Elections voting\nPolicies laws\nAmendments constitution' },
+                    { title: 'Economy', content: 'GDP growth\nInflation prices\nBudget spending' },
+                    { title: 'Science', content: 'Tech innovation\nSpace missions\nClimate change' },
+                    { title: 'Sports', content: 'Olympics games\nFootball cricket\nAthletes performance' },
+                    { title: 'Awards', content: 'Nobel Prize\nPadma Awards\nInternational recognition' }
+                ]
+            }
+        }
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    // STATE VARIABLES
+    // ═══════════════════════════════════════════════════════════════
+    let user = JSON.parse(localStorage.getItem('testifyUser')) || null;
+    let history = JSON.parse(localStorage.getItem('testifyHistory')) || [];
+    let currentExam = null;
+    let currentTestType = null;
+    let currentQuestions = [];
+    let currentAnswers = {};
+    let currentQuestionIndex = 0;
+    let quizTimer = null;
+    let quizTimeLeft = 0;
+    let currentResult = null;
+    let sidebarOpen = false;
+    let charts = {};
+
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZATION
+    // ═══════════════════════════════════════════════════════════════
+    window.addEventListener('load', () => {
+        if (user) {
+            showApp();
+        }
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // LANDING PAGE
+    // ═══════════════════════════════════════════════════════════════
+    function scrollToFeatures() {
+        document.getElementById('featuresSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function scrollToExams() {
+        document.getElementById('examsSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // LOGIN
+    // ═══════════════════════════════════════════════════════════════
+    function showLoginPage(mode) {
+        document.getElementById('landingPage').style.display = 'none';
+        document.getElementById('loginPage').style.display = 'flex';
+        document.getElementById('signupFields').style.display = mode === 'signup' ? 'block' : 'none';
+        document.getElementById('examSelectField').style.display = mode === 'signup' ? 'block' : 'none';
+        document.querySelector('.login-tabs').querySelectorAll('.login-tab').forEach((tab, i) => {
+            tab.classList.toggle('active', (i === 0 && mode === 'login') || (i === 1 && mode === 'signup'));
+        });
+        document.getElementById('submitBtn').textContent = mode === 'login' ? 'Sign In →' : 'Create Account →';
+        document.getElementById('toggleText').innerHTML = mode === 'login'
+            ? 'Don\'t have an account? <span class="login-toggle" onclick="switchLoginMode(\'signup\')">Sign Up</span>'
+            : 'Already have an account? <span class="login-toggle" onclick="switchLoginMode(\'login\')">Sign In</span>';
+    }
+
+    function switchLoginMode(mode) {
+        showLoginPage(mode);
+    }
+
+    function handleLogin() {
+        const email = document.getElementById('emailInput').value.trim();
+        const password = document.getElementById('passwordInput').value.trim();
+        const errorBox = document.getElementById('loginError');
+        const mode = document.getElementById('signupFields').style.display === 'block' ? 'signup' : 'login';
+
+        if (!email || !password) {
+            errorBox.textContent = 'Please fill all fields.';
+            errorBox.classList.add('show');
+            return;
+        }
+
+        if (password.length < 6) {
+            errorBox.textContent = 'Password must be 6+ characters.';
+            errorBox.classList.add('show');
+            return;
+        }
+
+        if (mode === 'signup') {
+            const name = document.getElementById('nameInput').value.trim();
+            const exam = document.getElementById('examSelect').value;
+            if (!name) {
+                errorBox.textContent = 'Name is required.';
+                errorBox.classList.add('show');
+                return;
+            }
+            user = {
+                name,
+                email,
+                exam: exam || 'JEE',
+                avatar: name[0].toUpperCase(),
+                joinDate: new Date().toLocaleDateString()
+            };
+        } else {
+            user = {
+                name: email.split('@')[0],
+                email,
+                exam: 'JEE',
+                avatar: email[0].toUpperCase(),
+                joinDate: new Date().toLocaleDateString()
+            };
+        }
+
+        localStorage.setItem('testifyUser', JSON.stringify(user));
+        showApp();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // APP
+    // ═══════════════════════════════════════════════════════════════
+    function showApp() {
+        document.getElementById('landingPage').style.display = 'none';
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('appContainer').style.display = 'flex';
+        updateUserCard();
+        updateHomeStats();
+        switchScreen('home');
+    }
+
+    function updateUserCard() {
+        if (!user) return;
+        document.getElementById('userAvatar').textContent = user.avatar;
+        document.getElementById('userName').textContent = user.name;
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('userExam').textContent = 'Target: ' + user.exam;
+        document.getElementById('settingsName').value = user.name;
+        document.getElementById('settingsEmail').value = user.email;
+        document.getElementById('settingsExam').value = user.exam;
+        updateSidebarStats();
+    }
+
+    function updateSidebarStats() {
+        const totalTests = history.length;
+        let avgScore = 0;
+        if (totalTests > 0) {
+            avgScore = Math.round(history.reduce((s, h) => s + (h.correct / h.total * 100), 0) / totalTests);
+        }
+        document.getElementById('sidebarTests').textContent = totalTests;
+        document.getElementById('sidebarAvg').textContent = avgScore + '%';
+    }
+
+    function updateHomeStats() {
+        const totalTests = history.length;
+        let totalCorrect = 0, totalQuestions = 0, maxScore = 0;
+        history.forEach(h => {
+            totalCorrect += h.correct;
+            totalQuestions += h.total;
+            maxScore = Math.max(maxScore, Math.round(h.correct / h.total * 100));
+        });
+        const avgScore = totalQuestions > 0 ? Math.round(totalCorrect / totalQuestions * 100) : 0;
+        document.getElementById('totalTests').textContent = totalTests;
+        document.getElementById('avgScore').textContent = avgScore + '%';
+        document.getElementById('bestScore').textContent = maxScore + '%';
+
+        // Update home chart
+        const examData = {};
+        history.forEach(h => {
+            if (!examData[h.exam]) examData[h.exam] = { total: 0, correct: 0 };
+            examData[h.exam].total += h.total;
+            examData[h.exam].correct += h.correct;
+        });
+        const chartData = Object.entries(examData).map(([e, v]) => ({
+            exam: e,
+            score: Math.round(v.correct / v.total * 100)
+        }));
+
+        if (chartData.length > 0) {
+            drawHomeChart(chartData);
+        }
+
+        // Update recent tests
+        const recentTestsHtml = history.slice(0, 3).map(h => `
+            <div class="history-item">
+                <span class="history-icon">${EXAMS[h.exam].icon}</span>
+                <div class="history-info">
+                    <div class="history-title">${h.exam} · ${h.testType}</div>
+                    <div class="history-date">${h.date}</div>
+                </div>
+                <div class="history-score" style="color: ${Math.round(h.correct/h.total*100) >= 60 ? '#4ECDC4' : '#FF6B6B'}">${Math.round(h.correct/h.total*100)}%</div>
+            </div>
+        `).join('');
+        document.getElementById('recentTests').innerHTML = recentTestsHtml || '<div style="text-align: center; color: var(--text-muted); padding: 40px;">No tests yet</div>';
+    }
+
+    function drawHomeChart(data) {
+        const ctx = document.getElementById('homeChart');
+        if (!ctx) return;
+        if (charts.homeChart) charts.homeChart.destroy();
+        charts.homeChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(d => d.exam),
+                datasets: [{
+                    label: 'Avg Score %',
+                    data: data.map(d => d.score),
+                    backgroundColor: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#9B59B6'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { max: 100, grid: { color: '#2a2a3a' }, ticks: { color: '#999' } }, x: { grid: { display: false }, ticks: { color: '#999' } } }
+            }
+        });
+    }
+
+    function toggleSidebar() {
+        sidebarOpen = !sidebarOpen;
+        document.getElementById('sidebar').classList.toggle('closed');
+        document.getElementById('mainContent').classList.toggle('sidebar-closed');
+    }
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId + 'Screen').classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        event.target.closest('.nav-item').classList.add('active');
+
+        if (screenId === 'home') updateHomeStats();
+        if (screenId === 'history') updateHistoryScreen();
+        if (screenId === 'notes') updateNotesSubjects();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // SELECT TEST
+    // ═══════════════════════════════════════════════════════════════
+    function selectExam(exam) {
+        currentExam = exam;
+        document.querySelectorAll('.select-card').forEach(card => {
+            card.classList.toggle('active', card.dataset.exam === exam);
+        });
+        const testModeSection = document.getElementById('testModeSection');
+        testModeSection.style.display = 'block';
+        const subjects = EXAMS[exam].subjects;
+        const modeHtml = `
+            <div class="mode-card" onclick="selectTestMode('fullExam')">
+                <div style="font-size: 32px; margin-bottom: 8px;">🏆</div>
+                <div class="mode-title">Full Syllabus</div>
+                <div class="mode-desc">${EXAMS[exam].time} min · Real pattern</div>
+            </div>
+            <div class="mode-card" onclick="selectTestMode('full')">
+                <div style="font-size: 32px; margin-bottom: 8px;">📝</div>
+                <div class="mode-title">Full Mock</div>
+                <div class="mode-desc">All subjects</div>
+            </div>
+            ${subjects.map(s => `
+                <div class="mode-card" onclick="selectTestMode('${s}')">
+                    <div style="font-size: 32px; margin-bottom: 8px;">📖</div>
+                    <div class="mode-title">${s}</div>
+                    <div class="mode-desc">Subject test</div>
+                </div>
+            `).join('')}
+        `;
+        document.getElementById('modeGrid').innerHTML = modeHtml;
+    }
+
+    function selectTestMode(mode) {
+        currentTestType = mode;
+        document.querySelectorAll('.mode-card').forEach((card, i) => {
+            card.classList.toggle('active', (mode === 'fullExam' && i === 0) || (mode === 'full' && i === 1) || (mode === card.textContent.includes(mode.split(':')[0])));
+        });
+        document.getElementById('startTestBtn').style.display = 'block';
+    }
+
+    function selectExamAndTest(exam) {
+        currentExam = exam;
+        currentTestType = 'full';
+        startTest();
+    }
+
+    function startTest() {
+        const subjects = currentTestType === 'fullExam' || currentTestType === 'full'
+            ? EXAMS[currentExam].subjects
+            : [currentTestType];
+
+        currentQuestions = [];
+        subjects.forEach(subj => {
+            const qCount = currentTestType === 'fullExam' ? 20 : 10;
+            const questions = QUESTIONS[currentExam][subj] || [];
+            currentQuestions = currentQuestions.concat(
+                questions.slice(0, qCount).map(q => ({ ...q, subject: subj }))
+            );
+        });
+
+        currentQuestions = currentQuestions.sort(() => Math.random() - 0.5);
+        currentAnswers = {};
+        currentQuestionIndex = 0;
+        quizTimeLeft = currentTestType === 'fullExam' ? EXAMS[currentExam].time * 60 : currentQuestions.length * 75;
+
+        switchToQuizScreen();
+    }
+
+    function switchToQuizScreen() {
+        switchScreen('quiz');
+        document.getElementById('quizExamIcon').textContent = EXAMS[currentExam].icon;
+        document.getElementById('quizExamLabel').textContent = currentExam + ' · ' + (currentTestType === 'fullExam' ? 'Full Syllabus' : currentTestType === 'full' ? 'Full Mock' : currentTestType);
+        displayQuestion();
+        startQuizTimer();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // QUIZ
+    // ═══════════════════════════════════════════════════════════════
+    function displayQuestion() {
+        const q = currentQuestions[currentQuestionIndex];
+        document.getElementById('questionCounter').textContent = `Q${currentQuestionIndex + 1}/${currentQuestions.length}`;
+        document.getElementById('questionSubject').textContent = q.subject;
+        document.getElementById('questionText').textContent = q.q;
+        document.getElementById('optionsBox').innerHTML = q.opts.map((opt, i) => `
+            <button class="option-btn ${currentAnswers[currentQuestionIndex] === i ? 'selected' : ''}" onclick="selectOption(${i})">
+                <span class="option-label">${String.fromCharCode(65 + i)}</span>
+                ${opt}
+            </button>
+        `).join('');
+        updateProgressBar();
+        updatePalette();
+    }
+
+    function selectOption(index) {
+        currentAnswers[currentQuestionIndex] = index;
+        displayQuestion();
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < currentQuestions.length - 1) {
+            currentQuestionIndex++;
+            displayQuestion();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            displayQuestion();
+        }
+    }
+
+    function updateProgressBar() {
+        const progress = ((currentQuestionIndex + 1) / currentQuestions.length) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+    }
+
+    function updatePalette() {
+        document.getElementById('paletteGrid').innerHTML = currentQuestions.map((_, i) => `
+            <button class="palette-btn ${currentAnswers[i] !== undefined ? 'answered' : ''} ${i === currentQuestionIndex ? 'current' : ''}" onclick="jumpToQuestion(${i})">${i + 1}</button>
+        `).join('');
+    }
+
+    function jumpToQuestion(index) {
+        currentQuestionIndex = index;
+        displayQuestion();
+    }
+
+    function startQuizTimer() {
+        if (quizTimer) clearInterval(quizTimer);
+        quizTimer = setInterval(() => {
+            quizTimeLeft--;
+            const minutes = Math.floor(quizTimeLeft / 60);
+            const seconds = quizTimeLeft % 60;
+            document.getElementById('quizTimer').textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            if (quizTimeLeft <= 60) {
+                document.getElementById('quizTimer').style.color = '#FF6B6B';
+            }
+            if (quizTimeLeft <= 0) {
+                clearInterval(quizTimer);
+                submitQuiz();
+            }
+        }, 1000);
+    }
+
+    function submitQuiz() {
+        clearInterval(quizTimer);
+        const subjectStats = {};
+        let correct = 0, wrong = 0, skipped = 0;
+
+        currentQuestions.forEach((q, i) => {
+            if (!subjectStats[q.subject]) subjectStats[q.subject] = { correct: 0, wrong: 0, skipped: 0 };
+            const ans = currentAnswers[i];
+            if (ans === undefined) {
+                subjectStats[q.subject].skipped++;
+                skipped++;
+            } else if (ans === q.ans) {
+                subjectStats[q.subject].correct++;
+                correct++;
+            } else {
+                subjectStats[q.subject].wrong++;
+                wrong++;
+            }
+        });
+
+        currentResult = {
+            exam: currentExam,
+            testType: currentTestType,
+            date: new Date().toLocaleDateString('en-IN'),
+            total: currentQuestions.length,
+            correct,
+            wrong,
+            skipped,
+            subjectStats
+        };
+
+        history.unshift(currentResult);
+        localStorage.setItem('testifyHistory', JSON.stringify(history));
+        displayResult();
+    }
+
+    function displayResult() {
+        const pct = Math.round(currentResult.correct / currentResult.total * 100);
+        const grade = pct >= 85 ? 'A' : pct >= 70 ? 'B' : pct >= 50 ? 'C' : pct >= 35 ? 'D' : 'F';
+
+        document.getElementById('resultScore').textContent = pct + '%';
+        document.getElementById('resultGrade').textContent = grade;
+        document.getElementById('correctCount').textContent = '✓ ' + currentResult.correct + ' Correct';
+        document.getElementById('wrongCount').textContent = '✗ ' + currentResult.wrong + ' Wrong';
+        document.getElementById('skippedCount').textContent = '— ' + currentResult.skipped + ' Skipped';
+
+        document.getElementById('aiSummary').textContent = `You scored ${currentResult.correct}/${currentResult.total} (${pct}%). ${pct >= 60 ? 'Great job!' : 'Keep practicing!'}`;
+        document.getElementById('aiTips').innerHTML = [
+            'Revise weak topics daily',
+            'Take more mock tests',
+            'Review short notes before test',
+            'Practice time management'
+        ].map(t => `<li>${t}</li>`).join('');
+
+        // Pie chart
+        const pieCtx = document.getElementById('pieChart');
+        if (charts.pie) charts.pie.destroy();
+        charts.pie = new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Correct', 'Wrong', 'Skipped'],
+                datasets: [{
+                    data: [currentResult.correct, currentResult.wrong, currentResult.skipped],
+                    backgroundColor: ['#4ECDC4', '#FF6B6B', '#FFB347']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#fff' } } }
+            }
+        });
+
+        // Bar chart
+        const barCtx = document.getElementById('barChart');
+        const subjectAccuracy = Object.entries(currentResult.subjectStats).map(([s, v]) => ({
+            subject: s,
+            accuracy: Math.round(v.correct / (v.correct + v.wrong) * 100)
+        }));
+
+        if (charts.bar) charts.bar.destroy();
+        charts.bar = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: subjectAccuracy.map(s => s.subject),
+                datasets: [{
+                    label: 'Accuracy %',
+                    data: subjectAccuracy.map(s => s.accuracy),
+                    backgroundColor: '#45B7D1',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { max: 100, grid: { color: '#2a2a3a' }, ticks: { color: '#999' } }, x: { grid: { display: false }, ticks: { color: '#999' } } }
+            }
+        });
+
+        switchScreen('result');
+    }
+
+    function retakeTest() {
+        startTest();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // NOTES
+    // ═══════════════════════════════════════════════════════════════
+    function updateNotesSubjects() {
+        const exam = document.getElementById('notesExamSelect').value;
+        const subjects = Object.keys(SHORT_NOTES_DATA[exam]);
+        document.getElementById('notesSubjectSelect').innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+        displayNotes();
+    }
+
+    function displayNotes() {
+        const exam = document.getElementById('notesExamSelect').value;
+        const subject = document.getElementById('notesSubjectSelect').value;
+        const notes = SHORT_NOTES_DATA[exam][subject];
+
+        if (!notes) return;
+
+        document.getElementById('notesGrid').innerHTML = notes.sections.map((s, i) => `
+            <div class="note-card" onclick="showNoteDetail(${i})">
+                <div class="note-title">${s.title}</div>
+                <div class="note-preview">${s.content.substring(0, 60)}...</div>
+            </div>
+        `).join('');
+    }
+
+    function showNoteDetail(index) {
+        const exam = document.getElementById('notesExamSelect').value;
+        const subject = document.getElementById('notesSubjectSelect').value;
+        const notes = SHORT_NOTES_DATA[exam][subject];
+        const section = notes.sections[index];
+
+        document.getElementById('notesDetail').innerHTML = `
+            <div class="notes-detail-title">${section.title}</div>
+            <div class="notes-detail-content">${section.content}</div>
+            <button class="download-btn" onclick="downloadNotes('${exam}', '${subject}')">📥 Download ${subject} Notes</button>
+        `;
+        document.getElementById('notesDetail').style.display = 'block';
+    }
+
+    function downloadNotes(exam, subject) {
+        const notes = SHORT_NOTES_DATA[exam][subject];
+        const content = notes.sections.map(s => `${s.title}\n${'='.repeat(40)}\n${s.content}\n\n`).join('\n');
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+        element.setAttribute('download', `Testify_${exam}_${subject}_Notes.txt`);
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // HISTORY
+    // ═══════════════════════════════════════════════════════════════
+    function updateHistoryScreen() {
+        document.getElementById('historyList').innerHTML = history.map(h => {
+            const pct = Math.round(h.correct / h.total * 100);
+            return `
+                <div class="history-item">
+                    <span class="history-icon">${EXAMS[h.exam].icon}</span>
+                    <div class="history-info">
+                        <div class="history-title">${h.exam} · ${h.testType}</div>
+                        <div class="history-date">${h.date} · ${h.total} Qs</div>
+                    </div>
+                    <div class="history-score" style="color: ${pct >= 60 ? '#4ECDC4' : '#FF6B6B'}">${pct}%</div>
+                </div>
+            `;
+        }).join('');
+
+        // History chart
+        const historyCtx = document.getElementById('historyChart');
+        const chartData = history.map((h, i) => ({
+            test: i + 1,
+            score: Math.round(h.correct / h.total * 100)
+        })).reverse();
+
+        if (charts.history) charts.history.destroy();
+        charts.history = new Chart(historyCtx, {
+            type: 'line',
+            data: {
+                labels: chartData.map((_, i) => 'Test ' + (i + 1)),
+                datasets: [{
+                    label: 'Score',
+                    data: chartData.map(d => d.score),
+                    borderColor: '#45B7D1',
+                    backgroundColor: 'rgba(69, 183, 209, 0.1)',
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: '#45B7D1',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#fff' } } },
+                scales: { y: { max: 100, grid: { color: '#2a2a3a' }, ticks: { color: '#999' } }, x: { grid: { display: false }, ticks: { color: '#999' } } }
+            }
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // SETTINGS
+    // ═══════════════════════════════════════════════════════════════
+    function saveSettings() {
+        user.name = document.getElementById('settingsName').value;
+        user.exam = document.getElementById('settingsExam').value;
+        user.avatar = user.name[0].toUpperCase();
+        localStorage.setItem('testifyUser', JSON.stringify(user));
+        updateUserCard();
+        alert('Settings saved successfully!');
+    }
+
+    function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('testifyUser');
+            localStorage.removeItem('testifyHistory');
+            location.reload();
+        }
+    }
+</script>
+
+</body>
+</html>

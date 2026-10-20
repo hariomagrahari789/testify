@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Logging Out</title>
+  <style>
+    body {
+      background-color: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    .message-box {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .message-box h2 {
+      color: #333;
+    }
+
+    .redirect-info {
+      margin-top: 10px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="message-box">
+    <h2>You have been logged out.</h2>
+    <p class="redirect-info">Redirecting to home page in 3 seconds...</p>
+  </div>
+
+  <script>
+    // Optional: clear session or cookies here
+    // localStorage.clear(); or sessionStorage.clear();
+
+    // Redirect after 3 seconds
+    setTimeout(function() {
+      window.location.href = "testify.html"; // Replace with your actual front page URL
+    }, 3000);
+  </script>
+
+</body>
+</html>

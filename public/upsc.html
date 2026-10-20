@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPSC Prelims & CSAT Test Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #1a56db;
+            --secondary: #1e429f;
+            --accent: #e53e3e;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray: #6b7280;
+            --light-gray: #e5e7eb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 28px;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .page {
+            display: none;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .page-title {
+            text-align: center;
+            color: var(--secondary);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+        
+        .timer {
+            background: var(--dark);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .test-container {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .question-panel {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .question-nav {
+            width: 250px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+        
+        .question-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .options {
+            margin-bottom: 25px;
+        }
+        
+        .option {
+            display: block;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            border-color: var(--primary);
+            background: rgba(66, 153, 225, 0.05);
+        }
+        
+        .option.selected {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+        
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: var(--light);
+            border: 2px solid var(--light-gray);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-btn:hover {
+            border-color: var(--primary);
+        }
+        
+        .nav-btn.answered {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+        
+        .nav-btn.current {
+            border: 3px solid var(--primary);
+            transform: scale(1.1);
+        }
+        
+        .result-container {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .result-summary {
+            flex: 1;
+        }
+        
+        .result-details {
+            flex: 1;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background: var(--light);
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat.correct .stat-number {
+            color: var(--success);
+        }
+        
+        .stat.incorrect .stat-number {
+            color: var(--danger);
+        }
+        
+        .stat.skipped .stat-number {
+            color: var(--warning);
+        }
+        
+        .chart-container {
+            height: 250px;
+            margin: 25px 0;
+        }
+        
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .question-review {
+            margin-top: 25px;
+        }
+        
+        .review-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: var(--light);
+        }
+        
+        .review-item.correct {
+            border-left: 4px solid var(--success);
+        }
+        
+        .review-item.incorrect {
+            border-left: 4px solid var(--danger);
+        }
+        
+        .review-item.skipped {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .review-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .review-answer {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        
+        .review-label {
+            font-weight: 600;
+            min-width: 120px;
+        }
+        
+        .review-value.correct {
+            color: var(--success);
+            font-weight: 600;
+        }
+        
+        .review-value.incorrect {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px 0;
+            margin-top: 40px;
+            color: var(--gray);
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        @media (max-width: 768px) {
+            .test-container, .result-container {
+                flex-direction: column;
+            }
+            
+            .question-nav {
+                width: 100%;
+                order: -1;
+                margin-bottom: 25px;
+            }
+            
+            .nav-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>UPSC Prelims & CSAT Test Platform</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Login Page -->
+        <div id="loginPage" class="page active">
+            <h2 class="page-title">Student Login</h2>
+            <div class="form-group">
+                <label for="studentName">Full Name</label>
+                <input type="text" id="studentName" placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+                <label for="rollNumber">Roll Number</label>
+                <input type="text" id="rollNumber" placeholder="Enter your roll number">
+            </div>
+            <div class="form-group">
+                <label for="testType">Select Test Type</label>
+                <select id="testType">
+                    <option value="prelims">UPSC Prelims</option>
+                    <option value="csat">CSAT</option>
+                    <option value="mixed">Mixed Prelims & CSAT</option>
+                </select>
+            </div>
+            <button id="startTestBtn" class="btn btn-block">Start Test</button>
+        </div>
+
+        <!-- Test Page -->
+        <div id="testPage" class="page">
+            <div class="test-header">
+                <div class="user-info">
+                    <h3>Welcome, <span id="studentNameDisplay"></span></h3>
+                    <p>Roll No: <span id="rollNumberDisplay"></span></p>
+                </div>
+                <div class="timer">
+                    <i class="fas fa-clock"></i>
+                    <span id="timeRemaining">03:00:00</span>
+                </div>
+            </div>
+            
+            <div class="test-container">
+                <div class="question-panel">
+                    <h3 class="question-title">Question <span id="questionNumber">1</span></h3>
+                    <div id="questionText"></div>
+                    <div id="options" class="options"></div>
+                    
+                    <div class="navigation-buttons">
+                        <button id="prevBtn" class="btn"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button id="nextBtn" class="btn">Next <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                
+                <div class="question-nav">
+                    <h4>Question Navigation</h4>
+                    <div id="navGrid" class="nav-grid"></div>
+                    
+                    <div style="margin-top: 25px;">
+                        <h4>Legend</h4>
+                        <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 15px; height: 15px; background: var(--success); border-radius: 3px;"></div>
+                                <span>Answered</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 15px; height: 15px; background: var(--light); border-radius: 3px;"></div>
+                                <span>Not Answered</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 15px; height: 15px; border: 2px solid var(--primary);"></div>
+                                <span>Current</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="submitTestBtn" class="btn btn-danger btn-block" style="margin-top: 25px;">
+                        Submit Test
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Page -->
+        <div id="resultsPage" class="page">
+            <h2 class="page-title">Test Result Analysis</h2>
+            <div class="result-container">
+                <div class="result-summary">
+                    <div class="result-card">
+                        <h3>Test Summary</h3>
+                        <div class="result-stats">
+                            <div class="stat correct">
+                                <div class="stat-number" id="correctCount">0</div>
+                                <div class="stat-label">Correct Answers</div>
+                            </div>
+                            <div class="stat incorrect">
+                                <div class="stat-number" id="incorrectCount">0</div>
+                                <div class="stat-label">Incorrect Answers</div>
+                            </div>
+                            <div class="stat skipped">
+                                <div class="stat-number" id="skippedCount">0</div>
+                                <div class="stat-label">Skipped</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat">
+                            <div class="stat-number" id="scorePercentage">0%</div>
+                            <div class="stat-label">Overall Score</div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <canvas id="resultChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>Download Result</h3>
+                        <p>Download a detailed PDF report of your test performance.</p>
+                        <button id="downloadBtn" class="btn download-btn">
+                            <i class="fas fa-download"></i> Download Result PDF
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="result-details">
+                    <div class="result-card">
+                        <h3>Detailed Analysis</h3>
+                        <div id="questionReview" class="question-review"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 UPSC Prelims & CSAT Test Platform. All rights reserved.</p>
+            <p>This is a simulation platform for practice purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample questions for UPSC Prelims and CSAT
+        const questions = [
+            {
+                id: 1,
+                text: "The term 'Digital Single Market Strategy' is sometimes seen in the news, is related to which organization?",
+                options: ["ASEAN", "BRICS", "EU", "G20"],
+                correctAnswer: 2,
+                category: "Prelims",
+                explanation: "The Digital Single Market strategy is an initiative of the European Union."
+            },
+            {
+                id: 2,
+                text: "Which one of the following is not a Harappan site?",
+                options: ["Chanhudaro", "Kot Diji", "Sohgaura", "Desalpur"],
+                correctAnswer: 2,
+                category: "Prelims",
+                explanation: "Sohgaura is not a Harappan site; it's known for an Ashokan inscription."
+            },
+            {
+                id: 3,
+                text: "With reference to the 'Global Alliance for Vaccines and Immunization (GAVI)', which of the following statements is/are correct? 1. It is a public-private global health partnership. 2. It aims to increase access to immunization in poor countries. 3. It is funded only by governments and not private organizations.",
+                options: ["1 only", "1 and 2 only", "3 only", "1, 2 and 3"],
+                correctAnswer: 1,
+                category: "Prelims",
+                explanation: "GAVI is a public-private partnership that increases immunization access and receives funding from both government and private sources."
+            },
+            {
+                id: 4,
+                text: "Consider the following pairs: Wetlands - Confluence of rivers 1. Harike Wetlands - Confluence of Beas and Sutlej 2. Keoladeo Ghana National Park - Confluence of Banas and Chambal 3. Kolleru Lake - Confluence of Musi and Krishna Which of the above pairs is/are correctly matched?",
+                options: ["1 only", "2 and 3 only", "1 and 3 only", "1, 2 and 3"],
+                correctAnswer: 0,
+                category: "Prelims",
+                explanation: "Only Harike Wetlands are correctly matched. Keoladeo is not at a confluence, and Kolleru Lake is fed by multiple rivers but not specifically at a confluence."
+            },
+            {
+                id: 5,
+                text: "Which of the following statements is/are correct regarding Smart India Hackathon 2017? 1. It is a centrally sponsored scheme for developing every city of our country into Smart Cities in a decade. 2. It is an initiative to identify new digital technology innovations for solving the many problems faced by our country. 3. It is a programme aimed at making all the financial transactions in our country completely digital in a decade.",
+                options: ["1 and 3 only", "2 only", "3 only", "2 and 3 only"],
+                correctAnswer: 1,
+                category: "Prelims",
+                explanation: "Smart India Hackathon 2017 was an initiative to identify digital technology innovations to solve national problems."
+            },
+            {
+                id: 6,
+                text: "A car travels from A to B at a speed of 40 km/h and returns from B to A at a speed of 60 km/h. What is the average speed for the whole journey?",
+                options: ["45 km/h", "48 km/h", "50 km/h", "52 km/h"],
+                correctAnswer: 1,
+                category: "CSAT",
+                explanation: "Average speed = 2ab/(a+b) = 2*40*60/(40+60) = 4800/100 = 48 km/h"
+            },
+            {
+                id: 7,
+                text: "If the sum of two numbers is 55 and the H.C.F. and L.C.M. of these numbers are 5 and 120 respectively, then the sum of the reciprocals of the numbers is equal to:",
+                options: ["55/601", "601/55", "11/120", "120/11"],
+                correctAnswer: 2,
+                category: "CSAT",
+                explanation: "Let numbers be a and b. Then, a + b = 55 and ab = 5*120 = 600. Sum of reciprocals = (a+b)/ab = 55/600 = 11/120"
+            },
+            {
+                id: 8,
+                text: "A man can row 6 km/h in still water. If the river is running at 2 km/h, it takes 3 hours more to row upstream than to row downstream for the same distance. How far is the place?",
+                options: ["24 km", "28 km", "32 km", "36 km"],
+                correctAnswer: 0,
+                category: "CSAT",
+                explanation: "Let distance be D km. Downstream speed = 8 km/h, upstream = 4 km/h. D/4 - D/8 = 3 → D/8 = 3 → D = 24 km"
+            },
+            {
+                id: 9,
+                text: "If 20% of a = b, then b% of 20 is the same as:",
+                options: ["4% of a", "5% of a", "20% of a", "None of these"],
+                correctAnswer: 0,
+                category: "CSAT",
+                explanation: "b = 20% of a = 0.2a. Then b% of 20 = (0.2a/100)*20 = 0.04a = 4% of a"
+            },
+            {
+                id: 10,
+                text: "The average of 20 numbers is zero. Of them, at the most, how many may be greater than zero?",
+                options: ["0", "1", "10", "19"],
+                correctAnswer: 3,
+                category: "CSAT",
+                explanation: "If average is 0, the sum must be 0. So if 19 numbers are 1, the 20th must be -19 to make sum 0."
+            }
+        ];
+
+        // Application state
+        const state = {
+            currentPage: 'loginPage',
+            studentName: '',
+            rollNumber: '',
+            testType: 'prelims',
+            currentQuestion: 0,
+            answers: [],
+            testStartTime: null,
+            timeRemaining: 3 * 60 * 60, // 3 hours in seconds
+            timerInterval: null
+        };
+
+        // DOM elements
+        const pages = {
+            login: document.getElementById('loginPage'),
+            test: document.getElementById('testPage'),
+            results: document.getElementById('resultsPage')
+        };
+
+        // Initialize application
+        function init() {
+            document.getElementById('startTestBtn').addEventListener('click', startTest);
+            document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+            document.getElementById('submitTestBtn').addEventListener('click', submitTest);
+            document.getElementById('downloadBtn').addEventListener('click', downloadResult);
+            
+            // Load any saved state
+            loadState();
+        }
+
+        // Load state from localStorage
+        function loadState() {
+            const savedState = localStorage.getItem('upscTestState');
+            if (savedState) {
+                Object.assign(state, JSON.parse(savedState));
+                
+                // If test was in progress, continue
+                if (state.currentPage !== 'loginPage') {
+                    showPage(state.currentPage);
+                    if (state.currentPage === 'testPage') {
+                        startTimer();
+                        renderTest();
+                    } else if (state.currentPage === 'resultsPage') {
+                        showResults();
+                    }
+                }
+            }
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem('upscTestState', JSON.stringify(state));
+        }
+
+        // Start the test
+        function startTest() {
+            state.studentName = document.getElementById('studentName').value;
+            state.rollNumber = document.getElementById('rollNumber').value;
+            state.testType = document.getElementById('testType').value;
+            
+            if (!state.studentName || !state.rollNumber) {
+                alert('Please enter your name and roll number');
+                return;
+            }
+            
+            // Initialize answers array
+            state.answers = Array(questions.length).fill(null);
+            state.currentQuestion = 0;
+            state.testStartTime = new Date().getTime();
+            state.timeRemaining = 3 * 60 * 60;
+            
+            showPage('testPage');
+            startTimer();
+            renderTest();
+            saveState();
+        }
+
+        // Show a specific page
+        function showPage(pageId) {
+            // Hide all pages
+            Object.values(pages).forEach(page => page.classList.remove('active'));
+            
+            // Show the requested page
+            pages[pageId.replace('Page', '').toLowerCase()].classList.add('active');
+            state.currentPage = pageId;
+        }
+
+        // Start the timer
+        function startTimer() {
+            clearInterval(state.timerInterval);
+            
+            state.timerInterval = setInterval(() => {
+                state.timeRemaining--;
+                
+                if (state.timeRemaining <= 0) {
+                    clearInterval(state.timerInterval);
+                    submitTest();
+                    return;
+                }
+                
+                updateTimerDisplay();
+                saveState();
+            }, 1000);
+            
+            updateTimerDisplay();
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const hours = Math.floor(state.timeRemaining / 3600);
+            const minutes = Math.floor((state.timeRemaining % 3600) / 60);
+            const seconds = state.timeRemaining % 60;
+            
+            document.getElementById('timeRemaining').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Render the test
+        function renderTest() {
+            // Update student info
+            document.getElementById('studentNameDisplay').textContent = state.studentName;
+            document.getElementById('rollNumberDisplay').textContent = state.rollNumber;
+            
+            // Render current question
+            renderQuestion();
+            
+            // Render navigation grid
+            renderNavigationGrid();
+        }
+
+        // Render the current question
+        function renderQuestion() {
+            const question = questions[state.currentQuestion];
+            document.getElementById('questionNumber').textContent = state.currentQuestion + 1;
+            document.getElementById('questionText').textContent = question.text;
+            
+            // Clear options
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            // Create options
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                if (state.answers[state.currentQuestion] === index) {
+                    optionElement.classList.add('selected');
+                }
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                
+                optionElement.addEventListener('click', () => {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    optionElement.classList.add('selected');
+                    
+                    // Save answer
+                    state.answers[state.currentQuestion] = index;
+                    saveState();
+                    
+                    // Update navigation grid
+                    renderNavigationGrid();
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+
+        // Render navigation grid
+        function renderNavigationGrid() {
+            const navGrid = document.getElementById('navGrid');
+            navGrid.innerHTML = '';
+            
+            questions.forEach((_, index) => {
+                const btn = document.createElement('button');
+                btn.classList.add('nav-btn');
+                if (state.answers[index] !== null) {
+                    btn.classList.add('answered');
+                }
+                if (index === state.currentQuestion) {
+                    btn.classList.add('current');
+                }
+                btn.textContent = index + 1;
+                
+                btn.addEventListener('click', () => {
+                    state.currentQuestion = index;
+                    renderQuestion();
+                    renderNavigationGrid();
+                    saveState();
+                });
+                
+                navGrid.appendChild(btn);
+            });
+        }
+
+        // Go to previous question
+        function prevQuestion() {
+            if (state.currentQuestion > 0) {
+                state.currentQuestion--;
+                renderQuestion();
+                renderNavigationGrid();
+                saveState();
+            }
+        }
+
+        // Go to next question
+        function nextQuestion() {
+            if (state.currentQuestion < questions.length - 1) {
+                state.currentQuestion++;
+                renderQuestion();
+                renderNavigationGrid();
+                saveState();
+            }
+        }
+
+        // Submit the test
+        function submitTest() {
+            clearInterval(state.timerInterval);
+            showPage('resultsPage');
+            showResults();
+            saveState();
+        }
+
+        // Show results
+        function showResults() {
+            // Calculate scores
+            let correct = 0;
+            let incorrect = 0;
+            let skipped = 0;
+            
+            questions.forEach((question, index) => {
+                if (state.answers[index] === null) {
+                    skipped++;
+                } else if (state.answers[index] === question.correctAnswer) {
+                    correct++;
+                } else {
+                    incorrect++;
+                }
+            });
+            
+            // Update summary
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('incorrectCount').textContent = incorrect;
+            document.getElementById('skippedCount').textContent = skipped;
+            
+            const percentage = Math.round((correct / questions.length) * 100);
+            document.getElementById('scorePercentage').textContent = `${percentage}%`;
+            
+            // Render chart
+            renderResultChart(correct, incorrect, skipped);
+            
+            // Render detailed review
+            renderQuestionReview();
+        }
+
+        // Render result chart
+        function renderResultChart(correct, incorrect, skipped) {
+            const ctx = document.getElementById('resultChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Correct', 'Incorrect', 'Skipped'],
+                    datasets: [{
+                        data: [correct, incorrect, skipped],
+                        backgroundColor: [
+                            '#10b981',
+                            '#ef4444',
+                            '#f59e0b'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render question review
+        function renderQuestionReview() {
+            const container = document.getElementById('questionReview');
+            container.innerHTML = '';
+            
+            questions.forEach((question, index) => {
+                const answer = state.answers[index];
+                const isCorrect = answer === question.correctAnswer;
+                const isSkipped = answer === null;
+                
+                const item = document.createElement('div');
+                item.classList.add('review-item');
+                
+                if (isSkipped) {
+                    item.classList.add('skipped');
+                } else if (isCorrect) {
+                    item.classList.add('correct');
+                } else {
+                    item.classList.add('incorrect');
+                }
+                
+                let status = '';
+                if (isSkipped) {
+                    status = 'Skipped';
+                } else if (isCorrect) {
+                    status = 'Correct';
+                } else {
+                    status = 'Incorrect';
+                }
+                
+                item.innerHTML = `
+                    <div class="review-question">Q${index + 1}: ${question.text}</div>
+                    <div class="review-answer">
+                        <span class="review-label">Your Answer:</span>
+                        <span class="review-value ${isCorrect ? 'correct' : 'incorrect'}">${isSkipped ? 'Not Attempted' : question.options[answer]}</span>
+                    </div>
+                    <div class="review-answer">
+                        <span class="review-label">Correct Answer:</span>
+                        <span class="review-value correct">${question.options[question.correctAnswer]}</span>
+                    </div>
+                    <div class="review-answer">
+                        <span class="review-label">Explanation:</span>
+                        <span>${question.explanation}</span>
+                    </div>
+                    <div class="review-answer">
+                        <span class="review-label">Status:</span>
+                        <span class="${isCorrect ? 'correct' : isSkipped ? 'skipped' : 'incorrect'}">${status}</span>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        // Download result as PDF
+        function downloadResult() {
+            alert('Result download functionality would be implemented here. In a real application, this would generate a PDF report.');
+            // This would use the jsPDF library to generate a PDF report
+        }
+
+        // Initialize the app when the page loads
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
